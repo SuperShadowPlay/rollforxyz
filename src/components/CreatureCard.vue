@@ -5,7 +5,14 @@
   :title="name"
   :text="cardText"
   :elevation="activeVals.elevation">
-  {{id}} ACTIVE: {{ activeID }}
+
+    <v-card-item>
+      ID: {{id}} ACTIVE: {{ activeID }}
+    </v-card-item>
+  
+    <v-card-actions class="right">
+      <v-btn icon="mdi-close-circle"></v-btn>
+    </v-card-actions>
   </v-card>
 </template>
 
