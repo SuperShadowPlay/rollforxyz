@@ -42,17 +42,24 @@
     initRolls.value.sort((a, b) => b.roll - a.roll) // Sorts by initiative on init
   })
 
-  // This might be necessary to update on an insertion into the list, but idk
+  // Sorts the initRolls list in descending order by roll
   function updateInitiativeOrder() {
-    initRolls.value.sort((a, b) => b.roll - a.roll);
+    initRolls.value.sort((a, b) => {
+      if (b.roll == a.roll) {
+        return a.id - b.id;
+      } else {
+        return b.roll - a.roll;
+      } 
+    });
   }
   
   // Increments the active ID through the list
   function nextActive() {
+    // Move index
     activeCreatureIndex++;
-    if (activeCreatureIndex >= initRolls.value.length) {
-      activeCreatureIndex = 0;
-    }
+    activeCreatureIndex %= initRolls.value.length;
+
+    // Update active card
     activeCreatureID.value = initRolls.value[activeCreatureIndex].id;
     console.log("ID: " + activeCreatureID.value + "    Idx: " + activeCreatureIndex);
   }
@@ -61,13 +68,14 @@
   function newCreature(c) {
     c.id = id++;
 
-    // If the new creature displaces the current active, update the active index to keep it correct
-    if (initRolls.value[activeCreatureIndex].roll < c.roll) {
-      activeCreatureIndex++;
-    }
-
     initRolls.value.push(c);
     updateInitiativeOrder();
+
+    // If the new creature displaces the current active, preserve the correct order and active card.
+    if (initRolls.value[activeCreatureIndex].roll < c.roll) {
+      activeCreatureIndex++;
+      activeCreatureID.value = initRolls.value[activeCreatureIndex].id;
+    }
   }
 
   // Triggered by removeCreature event from CreatureCard. Removes the creature that caused the event.
