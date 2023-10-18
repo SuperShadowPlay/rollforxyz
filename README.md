@@ -13,7 +13,7 @@ Made with the Vue.js 3 framework
 In no particular order:
 - [x] Scrollable and sorted initiative order
 - [x] Ability to add creatures to initiative order
-- [ ] Removable creatures
+- [x] Removable creatures
 - [ ] Save/load encounters
 - [ ] Integrate statblocks (only if legally possible - TBD)
 - [ ] Add status checkboxes

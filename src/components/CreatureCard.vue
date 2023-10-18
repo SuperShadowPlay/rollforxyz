@@ -11,7 +11,7 @@
     </v-card-item>
   
     <v-card-actions class="right">
-      <v-btn icon="mdi-close-circle"></v-btn>
+      <v-btn v-on:click="$emit('removeCreature', props.id)" icon="mdi-close-circle"></v-btn>
     </v-card-actions>
   </v-card>
 </template>
@@ -20,9 +20,9 @@
   import { ref, computed } from 'vue'
   const props = defineProps(['name', 'roll', 'id', 'activeID'])
 
+  // Changes card to be "active" if the current creature in the initiative order is the current prop
+  // Reactive based on activeID
   let activeVals = computed(() => {
-    console.log("Changed!")
-    console.log(props.activeID)
     if (props.activeID === props.id) { // Is active
       return {color: "error", elevation: 20}
     } else { // Is not active
