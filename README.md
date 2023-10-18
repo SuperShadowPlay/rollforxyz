@@ -14,6 +14,7 @@ In no particular order:
 - [x] Scrollable and sorted initiative order
 - [x] Ability to add creatures to initiative order
 - [x] Removable creatures
+- [ ] Add Github link
 - [ ] Save/load encounters
 - [ ] Integrate statblocks (only if legally possible - TBD)
 - [ ] Add status checkboxes
