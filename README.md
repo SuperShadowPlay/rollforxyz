@@ -15,6 +15,10 @@ In no particular order:
 - [x] Ability to add creatures to initiative order
 - [x] Removable creatures
 - [ ] Add Github link
+- [ ] Add satisfying feedback to button presses (submit, next, etc.)
+- [ ] Select an arbitrary card as the next in line
+- [ ] Only begin selecting creatures once the user is done initially adding creatures
+- [ ] Next button moves with active card
 - [ ] Save/load encounters
 - [ ] Integrate statblocks (only if legally possible - TBD)
 - [ ] Add status checkboxes

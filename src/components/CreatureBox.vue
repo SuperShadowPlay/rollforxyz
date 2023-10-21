@@ -1,7 +1,8 @@
 <template>
   <v-container>
     <h1>Roll for
-    <img class="logo" :src="logoImage"/></h1>
+      <img class="logo" :src="logoImage"/>
+    </h1>
     <br>
     <v-btn color="primary" size="x-large" v-on:click="nextActive">Next!</v-btn>
     <div v-for="creature in initRolls" :key="creature.roll">
