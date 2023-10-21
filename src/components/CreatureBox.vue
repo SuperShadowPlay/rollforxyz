@@ -1,35 +1,38 @@
 <template>
   <v-container>
-    <h1>Roll for
-      <img class="logo" :src="logoImage"/>
-    </h1>
     <br>
-    <v-btn color="primary" size="x-large" v-on:click="nextActive">Next!</v-btn>
-    <div v-for="creature in initRolls" :key="creature.roll">
-      <CreatureCard
-        :name="creature.name" :roll="creature.roll" :id="creature.id"
-        :activeID="activeCreatureID" @remove-creature="removeCreature"
-        />
+    <div class="nextButton">
+      <v-btn color="primary" size="x-large" v-on:click="nextButtonClick">Next!</v-btn>
     </div>
-    <br>
-    <CreateCreature @new-creature="newCreature"/>
+    
+    <div class="content">
+      <div class="cards" v-for="creature in initRolls" :key="creature.roll">
+        <CreatureCard
+          :name="creature.name" :roll="creature.roll" :id="creature.id"
+          :activeID="activeCreatureID" @remove-creature="removeCreature"
+          />
+      </div>
+      <br>
+      <CreateCreature @new-creature="newCreature"/>
+    </div>
   </v-container>
 </template>
 
 <script setup>
-  import { ref, watch } from 'vue'
+  import { ref } from 'vue'
   import CreatureCard from './CreatureCard.vue';
   import CreateCreature from './CreateCreature.vue';
 
-  import logoImage from "../assets/xyz_small.png";
-
-  //let roll = 20 // Debug: Counts down from 20 to provide fake initiative rolls
-  let activeCreatureID = ref(0) // Holds the id of which creature is active
-  let activeCreatureIndex = 0 // Holds the position of the initiative of the active creature
+  //
+  let activeCreatureID = ref(-1) // Holds the id of which creature is active
+  let activeCreatureIndex = -1 // Holds the position of the initiative of the active creature
+  let encounterActive = false // If the user has begun scrolling initiative for the encounter
   let id = 0 // Increments to provide a unique id for all creatures
 
   // Debug: Pregenerated values for initRolls. Normally will be initialized empty.
-  /*const initRolls = ref([
+  /*
+  let roll = 20 // Debug: Counts down from 20 to provide fake initiative rolls
+  const initRolls = ref([
     {roll: roll--, id: id++, name: "Bullywug 1"},
     {roll: 25, id: id++, name: "Bullywug 2"},
     {roll: roll--, id: id++, name: "Bullywug 3"},
@@ -37,17 +40,13 @@
     {roll: roll--, id: id++, name: "Bullywug 5"},
     {roll: roll--, id: id++, name: "Bullywug 6"},
     {roll: roll--, id: id++, name: "Bullywug 7"},
-  ]);*/
+  ]);
+  updateInitiativeOrder();
+  */
+
   // Get everything in the correct order on initial setup
   const initRolls = ref([]);
-  updateInitiativeOrder();
-  activeCreatureIndex = 0;
-  //activeCreatureID.value = initRolls.value[activeCreatureIndex].id;
-
-  // Maintains the sorted order of initRolls at all times (I don't think this works though!)
-  watch(initRolls, () => {
-    initRolls.value.sort((a, b) => b.roll - a.roll) // Sorts by initiative on init
-  })
+  resetEncounter()
 
   // Sorts the initRolls list in descending order by roll
   function updateInitiativeOrder() {
@@ -60,16 +59,30 @@
     });
   }
   
+  // Initializes variables to a default, non-active state
+  function resetEncounter() {
+    encounterActive = false;
+    activeCreatureID.value = -1;
+  }
+
   // Increments the active ID through the list
   function nextActive() {
-    // Move index
-    console.log("ID: " + activeCreatureID.value + "    Idx: " + activeCreatureIndex);
-    activeCreatureIndex++;
-    activeCreatureIndex %= initRolls.value.length;
+    if (encounterActive){      
+      // Move index
+      console.log("ID: " + activeCreatureID.value + "    Idx: " + activeCreatureIndex);
+      activeCreatureIndex++;
+      activeCreatureIndex %= initRolls.value.length;
 
-    // Update active card
-    activeCreatureID.value = initRolls.value[activeCreatureIndex].id;
-    console.log("ID: " + activeCreatureID.value + "    Idx: " + activeCreatureIndex);
+      // Update active card
+      activeCreatureID.value = initRolls.value[activeCreatureIndex].id;
+      console.log("ID: " + activeCreatureID.value + "    Idx: " + activeCreatureIndex);
+    }
+  }
+
+  // Run when the next button is clicked
+  function nextButtonClick() {
+    encounterActive = true;
+    nextActive();
   }
 
   // Insert a new creature. Triggered by an event from the CreateCreature component
@@ -81,17 +94,19 @@
     updateInitiativeOrder();
 
     // If the new creature displaces the current active, preserve the correct order and active card.
-    if (initRolls.value.length > 1) {
-      console.log("almost here " + previousActiveRoll + " new: " + c.roll + " eval: ")
-      console.log(previousActiveRoll < c.roll) // This makes the branch work correctly for some reason???? javascript why
-      if (previousActiveRoll < c.roll) {
-        console.log("Here")
+    if (encounterActive) {
+      if (initRolls.value.length > 1) {
+        console.log("almost here " + previousActiveRoll + " new: " + c.roll + " eval: ")
+        console.log(previousActiveRoll < c.roll) // This makes the branch work correctly for some reason???? javascript why
+        if (previousActiveRoll < c.roll) {
+          console.log("Here")
+          nextActive();
+        }
+      } else {
+        activeCreatureIndex--;
         nextActive();
+        console.log("NOt here");
       }
-    } else {
-      activeCreatureIndex--;
-      nextActive();
-      console.log("NOt here");
     }
     
   }
@@ -105,7 +120,7 @@
     initRolls.value = initRolls.value.filter((c) => c.id != id);
     console.log("After removal: ID: " + activeCreatureID.value + "    Idx: " + activeCreatureIndex);
 
-    if (activeCreatureIndex >= 0) {
+    if (encounterActive) {
       if (activeCreatureIndex > removedCreatureIndex) { // Only decrement when necessary to protect list order
         activeCreatureIndex--;
       }
@@ -114,19 +129,16 @@
         activeCreatureIndex %= initRolls.value.length; // Protect list order when the greatest index is removed
         activeCreatureID.value = initRolls.value[activeCreatureIndex].id;
       }
-    } else {
-      activeCreatureID.value = 0;
     }
   }
 </script>
 
 <style scoped>
-  .img {
-    max-width: auto;
-    max-height: 100%;
-  }
+.nextButton {
+  float: left;
+}
 
-  .logo {
-    height: 50px;
-  }
+.content {
+  width: 100%;
+}
 </style>

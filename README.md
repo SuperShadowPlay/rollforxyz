@@ -14,11 +14,12 @@ In no particular order:
 - [x] Scrollable and sorted initiative order
 - [x] Ability to add creatures to initiative order
 - [x] Removable creatures
-- [ ] Add Github link
+- [x] Add Github link
 - [ ] Add satisfying feedback to button presses (submit, next, etc.)
 - [ ] Select an arbitrary card as the next in line
-- [ ] Only begin selecting creatures once the user is done initially adding creatures
+- [x] Only begin selecting creatures once the user is done initially adding creatures
 - [ ] Next button moves with active card
+- [ ] Add metadata
 - [ ] Save/load encounters
 - [ ] Integrate statblocks (only if legally possible - TBD)
 - [ ] Add status checkboxes
