@@ -1,5 +1,5 @@
 <template>
-  <v-sheet width="500" class="mx-auto">
+  <v-sheet width="500" class="mx-auto" color="background">
     <v-form>
       <v-text-field
         v-model="newName"
@@ -16,7 +16,7 @@
           ></v-text-field>
         </template>
       </v-text-field>
-      <v-btn block class="mt-2" size="x-large" v-on:click="submit">Submit</v-btn>
+      <v-btn block class="mt-2" size="x-large" color="primary" v-on:click="submit">Submit</v-btn>
     </v-form>
   </v-sheet>
 </template>
