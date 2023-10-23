@@ -1,6 +1,11 @@
 # rollfor.xyz
 ### An initiative tracker for DnD 5e
 
+Roll for XYZ is an online initiative tracker designed for use with DnD 5e.
+It aims to provide convienent and customizable features to help Dungeon Masters
+focus less on keeping track of who's turn it is or what health an enemy has, and
+focus more on having fun!
+
 Made with the Vue.js 3 framework
 
 ## Project setup
@@ -15,11 +20,12 @@ In no particular order:
 - [x] Ability to add creatures to initiative order
 - [x] Removable creatures
 - [x] Add Github link
-- [ ] Add satisfying feedback to button presses (submit, next, etc.)
+- [x] Add satisfying feedback to button presses (submit, next, etc.)
+- [x] Add basic color theme
 - [ ] Select an arbitrary card as the next in line
 - [x] Only begin selecting creatures once the user is done initially adding creatures
 - [ ] Next button moves along the page with active card
-- [ ] Add metadata
+- [x] Add metadata
 - [ ] Save/load encounters
 - [ ] Integrate statblocks (only if legally possible - TBD)
 - [ ] Add status checkboxes
