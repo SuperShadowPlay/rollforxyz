@@ -21,7 +21,7 @@
 </template>
 
 <script setup>
-  import logoImage from "../assets/xyz_small.png";
+  import logoImage from "../assets/xyz_full_small_trans.png";
 </script>
 
 <style scoped>

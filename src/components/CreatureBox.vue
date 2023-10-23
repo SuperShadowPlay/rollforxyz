@@ -134,10 +134,6 @@
 </script>
 
 <style scoped>
-.nextButton {
-  float: left;
-}
-
 .content {
   width: 100%;
 }

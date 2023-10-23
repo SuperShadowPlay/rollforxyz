@@ -23,10 +23,12 @@
   // Changes card to be "active" if the current creature in the initiative order is the current prop
   // Reactive based on activeID
   let activeVals = computed(() => {
-    if (props.activeID === props.id) { // Is active
-      return {color: "error", elevation: 20}
-    } else { // Is not active
-      return {color: "secondary", elevation: 1}
+    if (props.activeID === props.id) {
+      // Is active
+      return {color: 'accent', elevation: 20}
+    } else {
+      // Is not active
+      return {color: 'secondary', elevation: 1}
     }
   })
 

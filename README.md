@@ -18,7 +18,7 @@ In no particular order:
 - [ ] Add satisfying feedback to button presses (submit, next, etc.)
 - [ ] Select an arbitrary card as the next in line
 - [x] Only begin selecting creatures once the user is done initially adding creatures
-- [ ] Next button moves with active card
+- [ ] Next button moves along the page with active card
 - [ ] Add metadata
 - [ ] Save/load encounters
 - [ ] Integrate statblocks (only if legally possible - TBD)
