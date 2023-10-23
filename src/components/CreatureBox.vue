@@ -1,22 +1,27 @@
 <template>
   <v-container>
-    <br>
-    <div class="nextButton">
-      <v-btn color="primary" size="x-large" v-on:click="nextButtonClick">Next!</v-btn>
+
+    <div class="controlArea">
+      <div class="nextButton">
+        <v-btn color="primary" icon="mdi-arrow-down-thick" size="x-large" v-on:click="nextButtonClick"></v-btn>
+      </div>
+
+      <div class="newCreatureBox">
+        <CreateCreature @new-creature="newCreature"/>
+      </div>
     </div>
     
     <div class="content">
       <transition-group name="card" tag="div" class="cards">
-          <CreatureCard
-            v-for="creature in initRolls" :key="creature.id"
-            :name="creature.name" :roll="creature.roll" :id="creature.id"
-            :activeID="activeCreatureID" @remove-creature="removeCreature"
-            class="individualCard"
-          />
-      </transition-group>
-      <br>
-      <CreateCreature @new-creature="newCreature"/>
+        <CreatureCard
+          v-for="creature in initRolls" :key="creature.id"
+          :name="creature.name" :roll="creature.roll" :id="creature.id"
+          :activeID="activeCreatureID" @remove-creature="removeCreature"
+          class="individualCard"
+        />
+      </transition-group>      
     </div>
+
   </v-container>
 </template>
 
@@ -137,6 +142,14 @@
   width: 100%;
 }
 
+.nextButton {
+  float: left;
+}
+
+.newCreatureBox {
+  float: center;
+}
+
 .card-enter-active,
 .card-leave-active {
   transition: all 0.5s ease-in-out;
@@ -147,10 +160,5 @@
 .card-leave-to {
   opacity: 0;
   transform: translate(30px);
-}
-
-@keyframes fadeIn {
-  0% { opacity: 0; }
-  100% { opacity: 1; }
 }
 </style>
