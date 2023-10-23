@@ -1,6 +1,11 @@
 # rollfor.xyz
 ### An initiative tracker for DnD 5e
 
+Roll for XYZ is an online initiative tracker designed for use with DnD 5e.
+It aims to provide convienent and customizable features to help Dungeon Masters
+focus less on keeping track of who's turn it is or what health an enemy has, and
+focus more on having fun!
+
 Made with the Vue.js 3 framework
 
 ## Project setup
