@@ -6,12 +6,14 @@
     </div>
     
     <div class="content">
-      <div class="cards" v-for="creature in initRolls" :key="creature.roll">
-        <CreatureCard
-          :name="creature.name" :roll="creature.roll" :id="creature.id"
-          :activeID="activeCreatureID" @remove-creature="removeCreature"
+      <transition-group name="card" tag="div" class="cards">
+          <CreatureCard
+            v-for="creature in initRolls" :key="creature.id"
+            :name="creature.name" :roll="creature.roll" :id="creature.id"
+            :activeID="activeCreatureID" @remove-creature="removeCreature"
+            class="individualCard"
           />
-      </div>
+      </transition-group>
       <br>
       <CreateCreature @new-creature="newCreature"/>
     </div>
@@ -63,6 +65,7 @@
   function resetEncounter() {
     encounterActive = false;
     activeCreatureID.value = -1;
+    activeCreatureIndex = -1;
   }
 
   // Increments the active ID through the list
@@ -90,22 +93,20 @@
     c.id = id++;
 
     initRolls.value.push(c);
-    let previousActiveRoll = initRolls.value[activeCreatureIndex].roll;
+    let previousActiveRoll;
+    if (encounterActive) { previousActiveRoll = initRolls.value[activeCreatureIndex].roll; }
     updateInitiativeOrder();
 
     // If the new creature displaces the current active, preserve the correct order and active card.
     if (encounterActive) {
       if (initRolls.value.length > 1) {
-        console.log("almost here " + previousActiveRoll + " new: " + c.roll + " eval: ")
         console.log(previousActiveRoll < c.roll) // This makes the branch work correctly for some reason???? javascript why
         if (previousActiveRoll < c.roll) {
-          console.log("Here")
           nextActive();
         }
       } else {
         activeCreatureIndex--;
         nextActive();
-        console.log("NOt here");
       }
     }
     
@@ -113,12 +114,10 @@
 
   // Triggered by removeCreature event from CreatureCard. Removes the creature that caused the event.
   function removeCreature(id) {
-    console.log("Before removal ID: " + activeCreatureID.value + "    Idx: " + activeCreatureIndex);
     // Reset tracking variables
     let removedCreatureIndex = initRolls.value.map((c) => c.id).indexOf(id);
     // Filter out removed card
     initRolls.value = initRolls.value.filter((c) => c.id != id);
-    console.log("After removal: ID: " + activeCreatureID.value + "    Idx: " + activeCreatureIndex);
 
     if (encounterActive) {
       if (activeCreatureIndex > removedCreatureIndex) { // Only decrement when necessary to protect list order
@@ -136,5 +135,22 @@
 <style scoped>
 .content {
   width: 100%;
+}
+
+.card-enter-active,
+.card-leave-active {
+  transition: all 0.5s ease-in-out;
+}
+
+.card-move,
+.card-enter-from,
+.card-leave-to {
+  opacity: 0;
+  transform: translate(30px);
+}
+
+@keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
 }
 </style>
