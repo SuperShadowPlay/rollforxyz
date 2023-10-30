@@ -21,9 +21,29 @@
       <v-textarea v-else v-model="properties.desc"></v-textarea>
     
       <v-card-actions class="right">
-        <v-btn v-on:click="$emit('removeCreature', props.id)" icon="mdi-close-circle"/>
-        <v-btn v-on:click="editButtonClick" :icon="editButtonIcon"/>
-        <v-btn v-on:click="selectButtonClick" icon="mdi-arrow-right-drop-circle"/>
+        <v-tooltip text="Remove" location="bottom">
+          <template v-slot:activator="{ props }">
+            <v-btn v-on:click="$emit('removeCreature', props.id)" icon="mdi-close-circle" v-bind="props"/>
+          </template>
+        </v-tooltip>
+        
+        <v-tooltip v-if="!editMode" text="Edit" location="bottom">
+          <template v-slot:activator="{ props }">
+            <v-btn v-on:click="editButtonClick" icon="mdi-pencil-outline" v-bind="props"/>
+          </template>
+        </v-tooltip>
+
+        <v-tooltip v-else text="Save" location="bottom">
+          <template v-slot:activator="{ props }">
+            <v-btn v-on:click="editButtonClick" icon="mdi-content-save-edit-outline" v-bind="props"/>
+          </template>
+        </v-tooltip>
+
+        <v-tooltip text="Select" location="bottom">
+          <template v-slot:activator="{ props }">
+            <v-btn v-on:click="selectButtonClick" icon="mdi-arrow-right-drop-circle" v-bind="props"/>
+          </template>
+        </v-tooltip>
       </v-card-actions>
     </v-card>
   </div>
@@ -56,7 +76,6 @@
 
   let previouslyActive = false; // If on the last activeID change, this card was active
   let activeTrans = ref(cardTrans.inactive); // Which cardTrans is currently in use
-  let editButtonIcon = ref('mdi-pencil-outline'); // Icon of the edit button (it changes)
 
   let editMode = ref(false); // Specifies if card information is editable
 
@@ -104,13 +123,11 @@
   function editButtonClick() {
     if (editMode.value) { // Turn off edit mode and send out update of properties
       editMode.value = false;
-      editButtonIcon.value = 'mdi-pencil-outline'
 
       emit('updateInfo', properties.value)
     }
     else { // Turn on edit mode
       editMode.value = true;
-      editButtonIcon.value = 'mdi-content-save-edit-outline'
     }
   }
 
