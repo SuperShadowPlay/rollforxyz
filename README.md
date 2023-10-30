@@ -22,7 +22,7 @@ In no particular order:
 - [x] Add Github link
 - [x] Add satisfying feedback to button presses (submit, next, etc.)
 - [x] Add basic color theme
-- [ ] Select an arbitrary card as the next in line
+- [x] Select an arbitrary card as the next in line
 - [x] Only begin selecting creatures once the user is done initially adding creatures
 - [ ] Next button moves along the page with active card
 - [ ] Page scrolls down when active enemy is off screen
@@ -30,8 +30,8 @@ In no particular order:
 - [ ] Save/load encounters
 - [ ] Integrate statblocks (only if legally possible - TBD)
 - [ ] Add status checkboxes
-- [ ] Add notes on creature
-- [ ] Edit creature
+- [x] Add notes on creature
+- [x] Edit creature
 - [ ] Roll initiative for you
 - [ ] Show actions
 - [ ] Icons for creatures

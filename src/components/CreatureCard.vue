@@ -105,8 +105,8 @@
     if (editMode.value) { // Turn off edit mode and send out update of properties
       editMode.value = false;
       editButtonIcon.value = 'mdi-pencil-outline'
-      
-      emit('updateInfo', properties)
+
+      emit('updateInfo', properties.value)
     }
     else { // Turn on edit mode
       editMode.value = true;

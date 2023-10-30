@@ -34,7 +34,6 @@
   const initTable = new initTableClass(); // Holds the creatures in the initiative
   const creatureListRef = initTable.getList(); // Expose the list to the template (for some reason?)
   const activeIDRef = initTable.getActiveID(); // Same as above
-  console.log('first ' + activeIDRef.value);
 
   let encounterActive = false // If the user has begun scrolling initiative for the encounter
 
@@ -118,7 +117,6 @@
   // Runs when a creature card is updated
   function updateInfo(c) {
     // When edit mode is exited on a card, this is called to make the changes.
-    // TODO: NOTHING HERE WORKS YET
     let editedCreatureIndex = initTable.getIndexByID(c.id);
 
     // Update properties of creature
@@ -129,7 +127,11 @@
       roll: c.roll,
     };
 
+    // If roll is changed, is re-orders the cards.
+    // Right now if the active card is changed, active status moves with it down the list.
+    // This seems fine but maybe it would be worth changing in the future.
     initTable.sort();
+    initTable.changeActive(initTable.activeID.value);
   }
 
   function changeActive(newActiveID) {
