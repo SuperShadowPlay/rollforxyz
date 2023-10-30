@@ -76,16 +76,15 @@
 
   // Insert a new creature. Triggered by an event from the CreateCreature component
   function newCreature(c) {
-    let previousActiveIndex;
-    if (encounterActive) { previousActiveIndex = initTable.list.value[initTable.activeIndex].roll; }
+    let previousActiveRoll;
+    if (encounterActive) { previousActiveRoll = initTable.list.value[initTable.activeIndex].roll; }
 
-    let newID = initTable.add(c.name, c.roll, c.desc);
-    let newIndex = initTable.getIndexByID(newID);
+    initTable.add(c.name, c.roll, c.desc);
 
     // If the new creature displaces the current active, preserve the correct order and active card.
     if (encounterActive) {
       if (initTable.list.value.length > 1) {
-        if (previousActiveIndex < c.roll) {
+        if (previousActiveRoll < c.roll) {
           nextActive();
         }
       } else {
