@@ -32,7 +32,7 @@
 <script setup>
   import { ref, computed, watch } from 'vue'
   const props = defineProps(['name', 'roll', 'desc', 'id', 'activeID'])
-  const emit = defineEmits(['updateInfo'])
+  const emit = defineEmits(['updateInfo', 'changeActive'])
 
   let properties = ref({ // Contains props in an editable fashion
     name: props.name,
@@ -115,8 +115,8 @@
   }
 
   function selectButtonClick() {
-    properties.value.activeID = properties.value.id;
-    emit('updateInfo', properties)
+    // When this current card is forcibly made the active card
+    emit('changeActive', properties.value.id)
   }
 </script>
 

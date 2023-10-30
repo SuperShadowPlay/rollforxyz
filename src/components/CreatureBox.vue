@@ -17,7 +17,7 @@
           v-for="creature in creatureListRef" :key="creature.id"
           :name="creature.name" :desc="creature.desc" :roll="creature.roll"
           :id="creature.id" :activeID="activeIDRef"
-          @remove-creature="removeCreature" @update-info="updateInfo"
+          @remove-creature="removeCreature" @update-info="updateInfo" @change-active="changeActive"
           class="individualCard"
         />
       </transition-group>      
@@ -34,6 +34,7 @@
   const initTable = new initTableClass(); // Holds the creatures in the initiative
   const creatureListRef = initTable.getList(); // Expose the list to the template (for some reason?)
   const activeIDRef = initTable.getActiveID(); // Same as above
+  console.log('first ' + activeIDRef.value);
 
   let encounterActive = false // If the user has begun scrolling initiative for the encounter
 
@@ -116,12 +117,25 @@
 
   // Runs when a creature card is updated
   function updateInfo(c) {
-    // TODO: EVERYTHING HERE DOESNT WORK!!!!!!!!!!!!
-    let editedCreatureIndex = initTable.list.value.map((creature) => creature.id).indexOf(c.id);
-    initTable.list.value[editedCreatureIndex] = c;
-    initTable.activeID.value = c.activeID;
-    initTable.activeIndex = editedCreatureIndex;
+    // When edit mode is exited on a card, this is called to make the changes.
+    // TODO: NOTHING HERE WORKS YET
+    let editedCreatureIndex = initTable.getIndexByID(c.id);
+
+    // Update properties of creature
+    initTable.list.value[editedCreatureIndex] = {
+      name: c.name,
+      desc: c.desc,
+      id: c.id,
+      roll: c.roll,
+    };
+
     initTable.sort();
+  }
+
+  function changeActive(newActiveID) {
+    // Check if this creature became active
+    encounterActive = true;
+    initTable.changeActive(newActiveID)
   }
 </script>
 

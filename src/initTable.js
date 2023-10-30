@@ -19,6 +19,11 @@ export default class initTable {
     })
   }  
 
+  changeActive(newActiveID) {
+    this.activeID.value = newActiveID;
+    this.activeIndex = this.getIndexByID(newActiveID);
+  }
+
   add(newName, newRoll, newDesc) {
     // Add a creature to the initiative and returns its new ID
     let newCreature = {
