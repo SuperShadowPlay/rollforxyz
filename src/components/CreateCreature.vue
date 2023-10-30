@@ -34,6 +34,7 @@
     const newCreature = {
     name: newName.value,
     roll: newRoll.value,
+    desc: 'CreateCreature.vue lacks desc option'
   };
     console.log(newCreature);
     emit('newCreature', newCreature);

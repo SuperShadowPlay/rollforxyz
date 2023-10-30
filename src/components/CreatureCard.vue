@@ -1,17 +1,29 @@
 <template>
   <div class="card">
     <v-card
-    :color="activeVals.color"
-    :title="name"
-    :text="cardText"
-    :elevation="activeVals.elevation">
+    :color="cardConfig.color"
+    :elevation="cardConfig.elevation">
 
       <v-card-item>
-        ID: {{id}} ACTIVE: {{ activeID }}
+        <v-card-title>
+          <p v-if="!editMode">{{ properties.name }}</p>
+          <v-text-field v-else variant="underlined" v-model="properties.name" label="Name"/>
+        </v-card-title>
+        <v-card-subtitle>
+          <p v-if="!editMode">Roll: {{ properties.roll }}</p>
+          <v-text-field v-else type="number" style="width: 80px"
+          v-model="properties.roll" label="Roll"/>
+          <p>ID: {{ properties.id }}</p>
+        </v-card-subtitle>
       </v-card-item>
+
+      <v-card-text v-if="!editMode">{{ properties.desc }}</v-card-text>
+      <v-textarea v-else v-model="properties.desc"></v-textarea>
     
       <v-card-actions class="right">
-        <v-btn v-on:click="$emit('removeCreature', props.id)" icon="mdi-close-circle"></v-btn>
+        <v-btn v-on:click="$emit('removeCreature', props.id)" icon="mdi-close-circle"/>
+        <v-btn v-on:click="editButtonClick" :icon="editButtonIcon"/>
+        <v-btn v-on:click="selectButtonClick" icon="mdi-arrow-right-drop-circle"/>
       </v-card-actions>
     </v-card>
   </div>
@@ -19,7 +31,16 @@
 
 <script setup>
   import { ref, computed, watch } from 'vue'
-  const props = defineProps(['name', 'roll', 'id', 'activeID'])
+  const props = defineProps(['name', 'roll', 'desc', 'id', 'activeID'])
+  const emit = defineEmits(['updateInfo'])
+
+  let properties = ref({ // Contains props in an editable fashion
+    name: props.name,
+    roll: props.roll,
+    desc: props.desc,
+    id: props.id,
+    activeID: props.activeID,
+  });
 
   /*
   This card is used to display each creature in the initative roll.
@@ -35,36 +56,68 @@
 
   let previouslyActive = false; // If on the last activeID change, this card was active
   let activeTrans = ref(cardTrans.inactive); // Which cardTrans is currently in use
+  let editButtonIcon = ref('mdi-pencil-outline'); // Icon of the edit button (it changes)
+
+  let editMode = ref(false); // Specifies if card information is editable
 
   // Changes card to be "active" if the current creature in the initiative order is the current prop
   // Reactive based on activeID
-  let activeVals = computed(() => {
-    if (props.activeID === props.id) {
-      // Is active
-      return {isActive: true, color: 'accent', elevation: 20}
-    } else {
-      // Is not active
-      return {isActive: false, color: 'secondary', elevation: 1}
+  let cardConfig = computed(() => {
+    // Defualt (non-active) values
+    let vals = {
+      isActive: false,
+      color: 'secondary',
+      elevation: 1,
     }
 
+    // If active
+    if (props.activeID === props.id) {
+      // Is active
+      vals.isActive = true;
+      vals.color = 'accent';
+      vals.elevation = 20;
+    }
+
+    // Different color for edit mode
+    if (editMode.value) {
+      vals.color = 'warning';
+    }
+    // TODO: Make a nicer accent color than just warning color for editing?
     
+    return vals;
   })
 
-  watch(activeVals, (activeVals) => {
+  watch(cardConfig, (cardConfig) => {
     // If current card was just made active, then run the activate animation
-    if (!previouslyActive && activeVals.isActive) {
+    if (!previouslyActive && cardConfig.isActive) {
       previouslyActive = true;
       activeTrans.value = cardTrans.active;
 
     }
     // If current card was just deactivated, then run the deactivate animation
-    else if (previouslyActive && !activeVals.isActive) {
+    else if (previouslyActive && !cardConfig.isActive) {
       previouslyActive = false;
       activeTrans.value = cardTrans.inactive;
     }
   })
 
-  const cardText = ref("Init roll: " + props.roll)
+  function editButtonClick() {
+    if (editMode.value) { // Turn off edit mode and send out update of properties
+      editMode.value = false;
+      editButtonIcon.value = 'mdi-pencil-outline'
+      
+      emit('updateInfo', properties)
+    }
+    else { // Turn on edit mode
+      editMode.value = true;
+      editButtonIcon.value = 'mdi-content-save-edit-outline'
+    }
+  }
+
+  function selectButtonClick() {
+    properties.value.activeID = properties.value.id;
+    emit('updateInfo', properties)
+  }
 </script>
 
 <style scoped>

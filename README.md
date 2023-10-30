@@ -25,6 +25,7 @@ In no particular order:
 - [ ] Select an arbitrary card as the next in line
 - [x] Only begin selecting creatures once the user is done initially adding creatures
 - [ ] Next button moves along the page with active card
+- [ ] Page scrolls down when active enemy is off screen
 - [x] Add metadata
 - [ ] Save/load encounters
 - [ ] Integrate statblocks (only if legally possible - TBD)
@@ -48,6 +49,7 @@ Who knows what else from there! I want the primary function to be *chefs kiss* p
 other, larger features such as:
 - [ ] Prepared stat block area
   - Keep stat blocks at the ready during your encounters
+- [ ] Custom stat blocks stored by accounts
 
 ## Author and License
 By Trevor Corcoran
