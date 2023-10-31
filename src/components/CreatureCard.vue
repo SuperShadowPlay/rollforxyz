@@ -10,20 +10,55 @@
           <v-text-field v-else variant="underlined" v-model="properties.name" label="Name"/>
         </v-card-title>
         <v-card-subtitle>
-          <p v-if="!editMode">Roll: {{ properties.roll }}</p>
-          <v-text-field v-else type="number" style="width: 80px"
-          v-model="properties.roll" label="Roll"/>
+          <v-text-field
+          style="width: 80px"
+          prepend-inner-icon="mdi-dice-d20"
+          :type="editMode ? 'number' : 'text'"
+          :variant="editMode ? 'underlined' : 'plain'"
+          v-model="properties.roll"
+          :label="editMode ? 'Roll' : ''"/>
           <p>ID: {{ properties.id }}</p>
         </v-card-subtitle>
       </v-card-item>
 
-      <v-card-text v-if="!editMode">{{ properties.desc }}</v-card-text>
-      <v-textarea v-else v-model="properties.desc"></v-textarea>
+      <v-card-item>
+        <v-card-text v-if="!editMode"
+        :label="editMode ? 'Description' : ''">
+          {{ properties.desc }}
+        </v-card-text>
+        <v-textarea v-else v-model="properties.desc"></v-textarea>
+      </v-card-item>
+      
+      <v-card-item>
+        <v-text-field
+        prepend-inner-icon="mdi-heart"
+        style="width: 100px"
+        :variant="editMode ? 'underlined' : 'plain'"
+        :type="editMode ? 'number': 'text'"
+        :label="editMode ? 'Health' : ''"
+        :readonly="!editMode"
+        v-model="properties.health">
+        </v-text-field>
+
+        <v-card-actions>
+          <v-tooltip text="Add Health" location="top">
+            <template v-slot:activator="{ props }">
+              <v-btn v-on:click="console.log('ADD BUTTON NOT IMPLEMENTED')" icon="mdi-plus-box" v-bind="props"/>
+            </template>
+          </v-tooltip>
+
+          <v-tooltip text="Subtract Health" location="top">
+            <template v-slot:activator="{ props }">
+              <v-btn v-on:click="console.log('SUBTRACT BUTTON NOT IMPLEMENTED')" icon="mdi-minus-box" v-bind="props"/>
+            </template>
+          </v-tooltip>
+        </v-card-actions>
+      </v-card-item>
     
       <v-card-actions class="right">
         <v-tooltip text="Remove" location="bottom">
           <template v-slot:activator="{ props }">
-            <v-btn v-on:click="$emit('removeCreature', props.id)" icon="mdi-close-circle" v-bind="props"/>
+            <v-btn v-on:click="removeButtonClick" icon="mdi-close-circle" v-bind="props"/>
           </template>
         </v-tooltip>
         
@@ -51,13 +86,14 @@
 
 <script setup>
   import { ref, computed, watch } from 'vue'
-  const props = defineProps(['name', 'roll', 'desc', 'id', 'activeID'])
-  const emit = defineEmits(['updateInfo', 'changeActive'])
+  const props = defineProps(['name', 'roll', 'desc', 'health', 'id', 'activeID'])
+  const emit = defineEmits(['removeCreature', 'updateInfo', 'changeActive'])
 
   let properties = ref({ // Contains props in an editable fashion
     name: props.name,
     roll: props.roll,
     desc: props.desc,
+    health: props.health,
     id: props.id,
     activeID: props.activeID,
   });
@@ -134,6 +170,10 @@
   function selectButtonClick() {
     // When this current card is forcibly made the active card
     emit('changeActive', properties.value.id)
+  }
+
+  function removeButtonClick() {
+    emit('removeCreature', props.id)
   }
 </script>
 

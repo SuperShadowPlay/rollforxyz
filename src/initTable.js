@@ -30,6 +30,7 @@ export default class initTable {
       name: newName,
       roll: newRoll,
       desc: newDesc,
+      health: null,
       id: nanoid()
     };
     this.list.value.push(newCreature);

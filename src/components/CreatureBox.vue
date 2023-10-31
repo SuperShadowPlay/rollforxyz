@@ -15,7 +15,8 @@
       <transition-group name="card" tag="div" class="cards">
         <CreatureCard
           v-for="creature in creatureListRef" :key="creature.id"
-          :name="creature.name" :desc="creature.desc" :roll="creature.roll"
+          :name="creature.name" :desc="creature.desc"
+          :roll="creature.roll" :health="creature.health"
           :id="creature.id" :activeID="activeIDRef"
           @remove-creature="removeCreature" @update-info="updateInfo" @change-active="changeActive"
           class="individualCard"
