@@ -11,48 +11,47 @@
         </v-card-title>
         <v-card-subtitle>
           <v-text-field
-          style="width: 80px"
           prepend-inner-icon="mdi-dice-d20"
-          :type="editMode ? 'number' : 'text'"
+          type="text"
           :variant="editMode ? 'underlined' : 'plain'"
           v-model="properties.roll"
           :label="editMode ? 'Roll' : ''"/>
-          <p>ID: {{ properties.id }}</p>
         </v-card-subtitle>
       </v-card-item>
 
-      <v-card-item>
         <v-card-text v-if="!editMode"
         :label="editMode ? 'Description' : ''">
-          {{ properties.desc }}
+        {{ properties.desc }}
         </v-card-text>
         <v-textarea v-else v-model="properties.desc"></v-textarea>
-      </v-card-item>
       
       <v-card-item>
-        <v-text-field
-        prepend-inner-icon="mdi-heart"
-        style="width: 100px"
-        :variant="editMode ? 'underlined' : 'plain'"
-        :type="editMode ? 'number': 'text'"
-        :label="editMode ? 'Health' : ''"
-        :readonly="!editMode"
-        v-model="properties.health">
-        </v-text-field>
+        <div class="health">
+          <v-text-field
+          class="healthCount"
+          prepend-inner-icon="mdi-heart"
+          style="width: 100px"
+          :variant="editMode ? 'underlined' : 'plain'"
+          :type="editMode ? 'number': 'text'"
+          :label="editMode ? 'Health' : ''"
+          :readonly="!editMode"
+          v-model="properties.health">
+          </v-text-field>
 
-        <v-card-actions>
-          <v-tooltip text="Add Health" location="top">
-            <template v-slot:activator="{ props }">
-              <v-btn v-on:click="console.log('ADD BUTTON NOT IMPLEMENTED')" icon="mdi-plus-box" v-bind="props"/>
-            </template>
-          </v-tooltip>
+          <v-card-actions class="healthButtons">
+            <v-tooltip text="Add Health" location="top">
+              <template v-slot:activator="{ props }">
+                <v-btn v-on:click="properties.health++" icon="mdi-plus-box" v-bind="props"/>
+              </template>
+            </v-tooltip>
 
-          <v-tooltip text="Subtract Health" location="top">
-            <template v-slot:activator="{ props }">
-              <v-btn v-on:click="console.log('SUBTRACT BUTTON NOT IMPLEMENTED')" icon="mdi-minus-box" v-bind="props"/>
-            </template>
-          </v-tooltip>
-        </v-card-actions>
+            <v-tooltip text="Subtract Health" location="top">
+              <template v-slot:activator="{ props }">
+                <v-btn v-on:click="properties.health--" icon="mdi-minus-box" v-bind="props"/>
+              </template>
+            </v-tooltip>
+          </v-card-actions>
+        </div>
       </v-card-item>
     
       <v-card-actions class="right">
@@ -183,4 +182,22 @@
   transform: v-bind(activeTrans);
   transition: all 0.3s linear;
 }
+
+.health {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+}
+
+.healthCount {
+  order: 1;
+  flex-basis: 10%;
+}
+
+.healthButtons {
+  order: 2;
+  flex-basis: 100%;
+  flex-shrink: 2;
+}
+
 </style>
