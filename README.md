@@ -20,20 +20,22 @@ In no particular order:
 - [x] Ability to add creatures to initiative order
 - [x] Removable creatures
 - [x] Add Github link
-- [ ] Add satisfying feedback to button presses (submit, next, etc.)
-- [ ] Select an arbitrary card as the next in line
+- [x] Add satisfying feedback to button presses (submit, next, etc.)
+- [x] Add basic color theme
+- [x] Select an arbitrary card as the next in line
 - [x] Only begin selecting creatures once the user is done initially adding creatures
-- [ ] Next button moves along the page with active card
-- [ ] Add metadata
+- [x] Next button sticks to the bottom of the page
+- [ ] Page scrolls down when active enemy is off screen
+- [x] Add metadata
 - [ ] Save/load encounters
 - [ ] Integrate statblocks (only if legally possible - TBD)
 - [ ] Add status checkboxes
-- [ ] Add notes on creature
-- [ ] Edit creature
+- [x] Add notes on creature
+- [x] Edit creature
 - [ ] Roll initiative for you
 - [ ] Show actions
 - [ ] Icons for creatures
-- [ ] Health tracker
+- [x] Health tracker
 - [ ] Cross out defeated enemy
 - [ ] Fancy initiative count markers
 - [ ] Nice stylesheet and interface (subjective and a bottomless pit of development time)
@@ -47,6 +49,7 @@ Who knows what else from there! I want the primary function to be *chefs kiss* p
 other, larger features such as:
 - [ ] Prepared stat block area
   - Keep stat blocks at the ready during your encounters
+- [ ] Custom stat blocks stored by accounts
 
 ## Author and License
 By Trevor Corcoran

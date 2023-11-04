@@ -1,17 +1,83 @@
 <template>
   <div class="card">
     <v-card
-    :color="activeVals.color"
-    :title="name"
-    :text="cardText"
-    :elevation="activeVals.elevation">
+    :color="cardConfig.color"
+    :elevation="cardConfig.elevation">
 
       <v-card-item>
-        ID: {{id}} ACTIVE: {{ activeID }}
+        <v-card-title>
+          <p v-if="!editMode">{{ properties.name }}</p>
+          <v-text-field v-else variant="underlined" v-model="properties.name" label="Name"/>
+        </v-card-title>
+        <v-card-subtitle>
+          <v-text-field
+          prepend-inner-icon="mdi-dice-d20"
+          type="text"
+          :variant="editMode ? 'underlined' : 'plain'"
+          v-model="properties.roll"
+          :label="editMode ? 'Roll' : ''"/>
+        </v-card-subtitle>
+      </v-card-item>
+
+        <v-card-text v-if="!editMode"
+        :label="editMode ? 'Description' : ''">
+        {{ properties.desc }}
+        </v-card-text>
+        <v-textarea v-else v-model="properties.desc"></v-textarea>
+      
+      <v-card-item>
+        <div class="health">
+          <v-text-field
+          class="healthCount"
+          prepend-inner-icon="mdi-heart"
+          style="width: 100px"
+          :variant="editMode ? 'underlined' : 'plain'"
+          :type="editMode ? 'number': 'text'"
+          :label="editMode ? 'Health' : ''"
+          :readonly="!editMode"
+          v-model="properties.health">
+          </v-text-field>
+
+          <v-card-actions class="healthButtonContainer">
+            <v-tooltip text="Add Health" location="top">
+              <template v-slot:activator="{ props }">
+                <v-btn v-on:click="properties.health++" icon="mdi-plus-box" v-bind="props"/>
+              </template>
+            </v-tooltip>
+
+            <v-tooltip text="Subtract Health" location="top">
+              <template v-slot:activator="{ props }">
+                <v-btn v-on:click="properties.health--" icon="mdi-minus-box" v-bind="props"/>
+              </template>
+            </v-tooltip>
+          </v-card-actions>
+        </div>
       </v-card-item>
     
       <v-card-actions class="right">
-        <v-btn v-on:click="$emit('removeCreature', props.id)" icon="mdi-close-circle"></v-btn>
+        <v-tooltip text="Remove" location="bottom">
+          <template v-slot:activator="{ props }">
+            <v-btn v-on:click="removeButtonClick" icon="mdi-close-circle" v-bind="props"/>
+          </template>
+        </v-tooltip>
+        
+        <v-tooltip v-if="!editMode" text="Edit" location="bottom">
+          <template v-slot:activator="{ props }">
+            <v-btn v-on:click="editButtonClick" icon="mdi-pencil-outline" v-bind="props"/>
+          </template>
+        </v-tooltip>
+
+        <v-tooltip v-else text="Save" location="bottom">
+          <template v-slot:activator="{ props }">
+            <v-btn v-on:click="editButtonClick" icon="mdi-content-save-edit-outline" v-bind="props"/>
+          </template>
+        </v-tooltip>
+
+        <v-tooltip text="Select" location="bottom">
+          <template v-slot:activator="{ props }">
+            <v-btn v-on:click="selectButtonClick" icon="mdi-arrow-right-drop-circle" v-bind="props"/>
+          </template>
+        </v-tooltip>
       </v-card-actions>
     </v-card>
   </div>
@@ -19,7 +85,17 @@
 
 <script setup>
   import { ref, computed, watch } from 'vue'
-  const props = defineProps(['name', 'roll', 'id', 'activeID'])
+  const props = defineProps(['name', 'roll', 'desc', 'health', 'id', 'activeID'])
+  const emit = defineEmits(['removeCreature', 'updateInfo', 'changeActive'])
+
+  let properties = ref({ // Contains props in an editable fashion
+    name: props.name,
+    roll: props.roll,
+    desc: props.desc,
+    health: props.health,
+    id: props.id,
+    activeID: props.activeID,
+  });
 
   /*
   This card is used to display each creature in the initative roll.
@@ -36,35 +112,67 @@
   let previouslyActive = false; // If on the last activeID change, this card was active
   let activeTrans = ref(cardTrans.inactive); // Which cardTrans is currently in use
 
-  // Changes card to be "active" if the current creature in the initiative order is the current prop
+  let editMode = ref(false); // Specifies if card information is editable
+
   // Reactive based on activeID
-  let activeVals = computed(() => {
-    if (props.activeID === props.id) {
-      // Is active
-      return {isActive: true, color: 'accent', elevation: 20}
-    } else {
-      // Is not active
-      return {isActive: false, color: 'secondary', elevation: 1}
+  // This handles the "functional" attributes of the card while `properties` holds all the actual data
+  let cardConfig = computed(() => {
+    // Defualt (non-active) values
+    let vals = {
+      isActive: false,
+      color: 'secondary',
+      elevation: 1,
     }
 
+    // If active
+    if (props.activeID === props.id) {
+      vals.isActive = true;
+      vals.color = 'accent';
+      vals.elevation = 20;
+    }
+
+    // Different color for edit mode
+    if (editMode.value) {
+      vals.color = 'warning';
+    }
+    // TODO: Make a nicer accent color than just warning color for editing?
     
+    return vals;
   })
 
-  watch(activeVals, (activeVals) => {
+  watch(cardConfig, (cardConfig) => {
     // If current card was just made active, then run the activate animation
-    if (!previouslyActive && activeVals.isActive) {
+    if (!previouslyActive && cardConfig.isActive) {
       previouslyActive = true;
       activeTrans.value = cardTrans.active;
 
     }
     // If current card was just deactivated, then run the deactivate animation
-    else if (previouslyActive && !activeVals.isActive) {
+    else if (previouslyActive && !cardConfig.isActive) {
       previouslyActive = false;
       activeTrans.value = cardTrans.inactive;
     }
   })
 
-  const cardText = ref("Init roll: " + props.roll)
+  function editButtonClick() {
+    if (editMode.value) { // Turn off edit mode and send out update of properties
+      editMode.value = false;
+
+      emit('updateInfo', properties.value)
+    }
+    else { // Turn on edit mode
+      editMode.value = true;
+    }
+  }
+
+  function selectButtonClick() {
+    // When this current card is forcibly made the active card
+    emit('changeActive', properties.value.id)
+  }
+
+  function removeButtonClick() {
+    emit('removeCreature', props.id)
+  }
 </script>
 
 <style scoped>
@@ -73,4 +181,25 @@
   transform: v-bind(activeTrans);
   transition: all 0.3s linear;
 }
+
+.health {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+}
+
+.healthCount {
+  order: 1;
+  flex-basis: 20%;
+  flex-shrink: 1;
+  flex-grow: 1;
+}
+
+.healthButtonContainer {
+  order: 2;
+  flex-basis: 80%;
+  flex-shrink: 2;
+  flex-grow: 2;
+}
+
 </style>

@@ -1,22 +1,13 @@
 <template>
-  <v-container>
-
-    <div class="controlArea">
-      <div class="nextButton">
-        <v-btn color="primary" icon="mdi-arrow-down-thick" size="x-large" v-on:click="nextButtonClick"></v-btn>
-      </div>
-
-      <div class="newCreatureBox">
-        <CreateCreature @new-creature="newCreature"/>
-      </div>
-    </div>
-    
+  <v-container>    
     <div class="content">
       <transition-group name="card" tag="div" class="cards">
         <CreatureCard
-          v-for="creature in initRolls" :key="creature.id"
-          :name="creature.name" :roll="creature.roll" :id="creature.id"
-          :activeID="activeCreatureID" @remove-creature="removeCreature"
+          v-for="creature in creatureListRef" :key="creature.id"
+          :name="creature.name" :desc="creature.desc"
+          :roll="creature.roll" :health="creature.health"
+          :id="creature.id" :activeID="activeIDRef"
+          @remove-creature="removeCreature" @update-info="updateInfo" @change-active="changeActive"
           class="individualCard"
         />
       </transition-group>      
@@ -26,124 +17,134 @@
 </template>
 
 <script setup>
-  import { ref } from 'vue'
+  import { computed, watch } from 'vue';
+  import { useStore } from 'vuex';
+
   import CreatureCard from './CreatureCard.vue';
-  import CreateCreature from './CreateCreature.vue';
+  import initTableClass from '@/initTable';
 
-  //
-  let activeCreatureID = ref(-1) // Holds the id of which creature is active
-  let activeCreatureIndex = -1 // Holds the position of the initiative of the active creature
+  const store = useStore(); // Vuex store
+  const initTable = new initTableClass(); // Holds the creatures in the initiative
+  const creatureListRef = initTable.getList(); // Expose the list to the template (for some reason?)
+  const activeIDRef = initTable.getActiveID(); // Same as above
+
   let encounterActive = false // If the user has begun scrolling initiative for the encounter
-  let id = 0 // Increments to provide a unique id for all creatures
-
-  // Debug: Pregenerated values for initRolls. Normally will be initialized empty.
-  /*
-  let roll = 20 // Debug: Counts down from 20 to provide fake initiative rolls
-  const initRolls = ref([
-    {roll: roll--, id: id++, name: "Bullywug 1"},
-    {roll: 25, id: id++, name: "Bullywug 2"},
-    {roll: roll--, id: id++, name: "Bullywug 3"},
-    {roll: roll--, id: id++, name: "Bullywug 4"},
-    {roll: roll--, id: id++, name: "Bullywug 5"},
-    {roll: roll--, id: id++, name: "Bullywug 6"},
-    {roll: roll--, id: id++, name: "Bullywug 7"},
-  ]);
-  updateInitiativeOrder();
-  */
 
   // Get everything in the correct order on initial setup
-  const initRolls = ref([]);
   resetEncounter()
 
-  // Sorts the initRolls list in descending order by roll
-  function updateInitiativeOrder() {
-    initRolls.value.sort((a, b) => {
-      if (b.roll == a.roll) {
-        return a.id - b.id;
-      } else {
-        return b.roll - a.roll;
-      } 
-    });
-  }
+  /*// Debug: Pregenerated values for initTable.list. Normally will be initialized empty.
+  initTable.add('Reya', 5, 'boring lawful good');
+  //initTable.add('Kimya', 16, 'crown wearer');
+  initTable.add('Josiah', 11, 'government agent');
+  //initTable.add('Sentry', 6, 'eats eyeballs');
+  initTable.add('Kurek', 18, 'puts up with them');*/
   
   // Initializes variables to a default, non-active state
   function resetEncounter() {
     encounterActive = false;
-    activeCreatureID.value = -1;
-    activeCreatureIndex = -1;
+    initTable.activeID.value = -1;
+    initTable.activeIndex = -1;
   }
 
   // Increments the active ID through the list
   function nextActive() {
     if (encounterActive){      
       // Move index
-      console.log("ID: " + activeCreatureID.value + "    Idx: " + activeCreatureIndex);
-      activeCreatureIndex++;
-      activeCreatureIndex %= initRolls.value.length;
+      console.log("ID: " + initTable.activeID.value + "    Idx: " + initTable.activeIndex);
+      initTable.activeIndex++;
+      initTable.activeIndex %= initTable.list.value.length;
 
       // Update active card
-      activeCreatureID.value = initRolls.value[activeCreatureIndex].id;
-      console.log("ID: " + activeCreatureID.value + "    Idx: " + activeCreatureIndex);
+      initTable.activeID.value = initTable.list.value[initTable.activeIndex].id;
+      console.log("ID: " + initTable.activeID.value + "    Idx: " + initTable.activeIndex);
     }
   }
 
   // Run when the next button is clicked
-  function nextButtonClick() {
+  let newNextButtonClick = computed(() => {
+    return store.state.nextButtonClick;
+  });
+  watch (newNextButtonClick, () => {
     encounterActive = true;
     nextActive();
-  }
+  });
 
-  // Insert a new creature. Triggered by an event from the CreateCreature component
-  function newCreature(c) {
-    c.id = id++;
+  // Watch for a new creature being added via the store
+  let newCreatureRequest = computed(() => {
+    return store.state.nextCreature;
+  });
+  watch(newCreatureRequest, (newCreatureProp) => insertNewCreature(newCreatureProp)); // DONT KNOW IF THIS WORKS, BUT IT SHOULD IF YOU MODIFY CREATECREATURE.VUE TO USE THE STORE INSTEAD OF EVENTS
 
-    initRolls.value.push(c);
+  // Insert a new creature. Triggered by a change to the store's nextCreature object.
+  function insertNewCreature(c) {
     let previousActiveRoll;
-    if (encounterActive) { previousActiveRoll = initRolls.value[activeCreatureIndex].roll; }
-    updateInitiativeOrder();
+    if (encounterActive) { previousActiveRoll = initTable.list.value[initTable.activeIndex].roll; }
+
+    initTable.add(c.name, c.roll, c.desc);
 
     // If the new creature displaces the current active, preserve the correct order and active card.
     if (encounterActive) {
-      if (initRolls.value.length > 1) {
-        console.log(previousActiveRoll < c.roll) // This makes the branch work correctly for some reason???? javascript why
+      if (initTable.list.value.length > 1) {
         if (previousActiveRoll < c.roll) {
           nextActive();
         }
       } else {
-        activeCreatureIndex--;
+        initTable.activeIndex--;
         nextActive();
       }
     }
-    
   }
 
   // Triggered by removeCreature event from CreatureCard. Removes the creature that caused the event.
   function removeCreature(id) {
-    // Reset tracking variables
-    let removedCreatureIndex = initRolls.value.map((c) => c.id).indexOf(id);
-    // Filter out removed card
-    initRolls.value = initRolls.value.filter((c) => c.id != id);
+    let removedCreatureIndex = initTable.remove(id);
 
     if (encounterActive) {
-      if (activeCreatureIndex > removedCreatureIndex) { // Only decrement when necessary to protect list order
-        activeCreatureIndex--;
+      if (initTable.activeIndex > removedCreatureIndex) { // Only decrement when necessary to protect list order
+        initTable.activeIndex--;
       }
       
-      if (initRolls.value.length != 0) {
-        activeCreatureIndex %= initRolls.value.length; // Protect list order when the greatest index is removed
-        activeCreatureID.value = initRolls.value[activeCreatureIndex].id;
+      if (initTable.list.value.length != 0) {
+        initTable.activeIndex %= initTable.list.value.length; // Protect list order when the greatest index is removed
+        initTable.activeID.value = initTable.list.value[initTable.activeIndex].id;
+      }
+      else { // List is empty, so encounter is inactive
+        resetEncounter();
       }
     }
+  }
+
+  // Runs when a creature card is updated
+  function updateInfo(c) {
+    // When edit mode is exited on a card, this is called to make the changes.
+    let editedCreatureIndex = initTable.getIndexByID(c.id);
+
+    // Update properties of creature
+    initTable.list.value[editedCreatureIndex] = {
+      name: c.name,
+      desc: c.desc,
+      id: c.id,
+      roll: c.roll,
+    };
+
+    // If roll is changed, is re-orders the cards.
+    // Right now if the active card is changed, active status moves with it down the list.
+    // This seems fine but maybe it would be worth changing in the future.
+    initTable.sort();
+    initTable.changeActive(initTable.activeID.value);
+  }
+
+  function changeActive(newActiveID) {
+    // Check if this creature became active
+    encounterActive = true;
+    initTable.changeActive(newActiveID)
   }
 </script>
 
 <style scoped>
 .content {
   width: 100%;
-}
-
-.nextButton {
-  float: left;
 }
 
 .newCreatureBox {
@@ -155,10 +156,14 @@
   transition: all 0.5s ease-in-out;
 }
 
-.card-move,
-.card-enter-from,
-.card-leave-to {
+.card-move {
+  transform: translate(0px);
+}
+.card-enter-from {
   opacity: 0;
   transform: translate(30px);
+}
+.card-leave-to {
+  opacity: 0;
 }
 </style>
