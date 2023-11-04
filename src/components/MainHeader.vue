@@ -9,7 +9,7 @@
         </div>
       </v-col>
 
-      <v-col>
+      <v-col cols="2">
         <div class="right">
           <v-btn variant="tonal" v-on:click="openGitHubPage">
             GitHub
