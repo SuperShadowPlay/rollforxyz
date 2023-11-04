@@ -38,7 +38,7 @@
           v-model="properties.health">
           </v-text-field>
 
-          <v-card-actions class="healthButtons">
+          <v-card-actions class="healthButtonContainer">
             <v-tooltip text="Add Health" location="top">
               <template v-slot:activator="{ props }">
                 <v-btn v-on:click="properties.health++" icon="mdi-plus-box" v-bind="props"/>
@@ -114,8 +114,8 @@
 
   let editMode = ref(false); // Specifies if card information is editable
 
-  // Changes card to be "active" if the current creature in the initiative order is the current prop
   // Reactive based on activeID
+  // This handles the "functional" attributes of the card while `properties` holds all the actual data
   let cardConfig = computed(() => {
     // Defualt (non-active) values
     let vals = {
@@ -126,7 +126,6 @@
 
     // If active
     if (props.activeID === props.id) {
-      // Is active
       vals.isActive = true;
       vals.color = 'accent';
       vals.elevation = 20;
@@ -191,13 +190,16 @@
 
 .healthCount {
   order: 1;
-  flex-basis: 10%;
+  flex-basis: 20%;
+  flex-shrink: 1;
+  flex-grow: 1;
 }
 
-.healthButtons {
+.healthButtonContainer {
   order: 2;
-  flex-basis: 100%;
+  flex-basis: 80%;
   flex-shrink: 2;
+  flex-grow: 2;
 }
 
 </style>

@@ -22,21 +22,24 @@
 </template>
 
 <script setup>
-  import {ref} from 'vue';
+  import { ref } from 'vue';
+  import { useStore } from 'vuex';
 
-  const emit = defineEmits(['newCreature']);
+  //const emit = defineEmits(['newCreature']);
 
+  const store = useStore();
   const newName = ref('');
   const newRoll = ref(null);
   
   // TODO: INPUT VALIDATION!!!!! <-----------------------------------------
   function submit() {
     const newCreature = {
-    name: newName.value,
-    roll: newRoll.value,
-    desc: ''
-  };
+      name: newName.value,
+      roll: newRoll.value,
+      desc: ''
+    };
     console.log(newCreature);
-    emit('newCreature', newCreature);
+    //emit('newCreature', newCreature);
+    store.commit('newCreature', newCreature);
   }
 </script>

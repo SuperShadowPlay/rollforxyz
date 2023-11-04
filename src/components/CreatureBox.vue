@@ -1,16 +1,5 @@
 <template>
-  <v-container>
-
-    <div class="controlArea">
-      <div class="nextButton">
-        <v-btn color="primary" icon="mdi-arrow-down-thick" size="x-large" v-on:click="nextButtonClick"></v-btn>
-      </div>
-
-      <div class="newCreatureBox">
-        <CreateCreature @new-creature="newCreature"/>
-      </div>
-    </div>
-    
+  <v-container>    
     <div class="content">
       <transition-group name="card" tag="div" class="cards">
         <CreatureCard
@@ -28,10 +17,13 @@
 </template>
 
 <script setup>
+  import { computed, watch } from 'vue';
+  import { useStore } from 'vuex';
+
   import CreatureCard from './CreatureCard.vue';
-  import CreateCreature from './CreateCreature.vue';
   import initTableClass from '@/initTable';
 
+  const store = useStore(); // Vuex store
   const initTable = new initTableClass(); // Holds the creatures in the initiative
   const creatureListRef = initTable.getList(); // Expose the list to the template (for some reason?)
   const activeIDRef = initTable.getActiveID(); // Same as above
@@ -70,13 +62,22 @@
   }
 
   // Run when the next button is clicked
-  function nextButtonClick() {
+  let newNextButtonClick = computed(() => {
+    return store.state.nextButtonClick;
+  });
+  watch (newNextButtonClick, () => {
     encounterActive = true;
     nextActive();
-  }
+  });
 
-  // Insert a new creature. Triggered by an event from the CreateCreature component
-  function newCreature(c) {
+  // Watch for a new creature being added via the store
+  let newCreatureRequest = computed(() => {
+    return store.state.nextCreature;
+  });
+  watch(newCreatureRequest, (newCreatureProp) => insertNewCreature(newCreatureProp)); // DONT KNOW IF THIS WORKS, BUT IT SHOULD IF YOU MODIFY CREATECREATURE.VUE TO USE THE STORE INSTEAD OF EVENTS
+
+  // Insert a new creature. Triggered by a change to the store's nextCreature object.
+  function insertNewCreature(c) {
     let previousActiveRoll;
     if (encounterActive) { previousActiveRoll = initTable.list.value[initTable.activeIndex].roll; }
 
@@ -93,7 +94,6 @@
         nextActive();
       }
     }
-    
   }
 
   // Triggered by removeCreature event from CreatureCard. Removes the creature that caused the event.
@@ -145,10 +145,6 @@
 <style scoped>
 .content {
   width: 100%;
-}
-
-.nextButton {
-  float: left;
 }
 
 .newCreatureBox {
