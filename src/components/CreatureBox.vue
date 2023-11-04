@@ -1,5 +1,13 @@
 <template>
-  <v-container>    
+  <v-container>
+
+    <transition name="fade">
+      <div v-if="initTable.list.value.length == 0" class="emptyText">
+        <h1 color="primary">Nothing is here yet!</h1>
+        <h2>Press the <v-icon icon="mdi-plus-circle-outline"/> below to begin.</h2>
+      </div>
+    </transition>
+
     <div class="content">
       <transition-group name="card" tag="div" class="cards">
         <CreatureCard
@@ -143,6 +151,16 @@
 </script>
 
 <style scoped>
+.emptyText {
+  position: fixed;
+  top: 30%;
+  left: 50%;
+  width: 80%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: #8e8e8e;
+}
+
 .content {
   width: 100%;
 }
@@ -164,6 +182,16 @@
   transform: translate(30px);
 }
 .card-leave-to {
+  opacity: 0;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
   opacity: 0;
 }
 </style>
