@@ -33,12 +33,12 @@
   // Get everything in the correct order on initial setup
   resetEncounter()
 
-  // Debug: Pregenerated values for initTable.list. Normally will be initialized empty.
+  /*// Debug: Pregenerated values for initTable.list. Normally will be initialized empty.
   initTable.add('Reya', 5, 'boring lawful good');
   //initTable.add('Kimya', 16, 'crown wearer');
   initTable.add('Josiah', 11, 'government agent');
   //initTable.add('Sentry', 6, 'eats eyeballs');
-  initTable.add('Kurek', 18, 'puts up with them');
+  initTable.add('Kurek', 18, 'puts up with them');*/
   
   // Initializes variables to a default, non-active state
   function resetEncounter() {

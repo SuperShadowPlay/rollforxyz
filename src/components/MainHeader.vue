@@ -11,7 +11,7 @@
 
       <v-col>
         <div class="right">
-          <v-btn variant="tonal" href="https://github.com/SuperShadowPlay/rollforxyz">
+          <v-btn variant="tonal" v-on:click="openGitHubPage">
             GitHub
           </v-btn>
         </div>
@@ -22,6 +22,10 @@
 
 <script setup>
   import logoImage from "../assets/xyz_full_small_trans.png";
+
+  function openGitHubPage() {
+    window.open('https://github.com/SuperShadowPlay/rollforxyz/', '_blank').focus();
+  }
 </script>
 
 <style scoped>

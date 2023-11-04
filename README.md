@@ -24,7 +24,7 @@ In no particular order:
 - [x] Add basic color theme
 - [x] Select an arbitrary card as the next in line
 - [x] Only begin selecting creatures once the user is done initially adding creatures
-- [ ] Next button moves along the page with active card
+- [x] Next button sticks to the bottom of the page
 - [ ] Page scrolls down when active enemy is off screen
 - [x] Add metadata
 - [ ] Save/load encounters
@@ -35,7 +35,7 @@ In no particular order:
 - [ ] Roll initiative for you
 - [ ] Show actions
 - [ ] Icons for creatures
-- [ ] Health tracker
+- [x] Health tracker
 - [ ] Cross out defeated enemy
 - [ ] Fancy initiative count markers
 - [ ] Nice stylesheet and interface (subjective and a bottomless pit of development time)
