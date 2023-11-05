@@ -42,9 +42,10 @@
   resetEncounter()
 
   // Debug: Pregenerated values for initTable.list. Normally will be initialized empty.
-  initTable.add('Reya', 5, 44, 18, 'boring lawful good');
+  /*initTable.add('Reya', 5, 44, 18, 'boring lawful good');
   initTable.add('Josiah', 11, 35, 16, 'government agent');
   initTable.add('Kurek', 18, 37, 14, 'puts up with them');
+  */
   
   // Initializes variables to a default, non-active state
   function resetEncounter() {

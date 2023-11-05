@@ -9,7 +9,7 @@
       <v-row>
         <v-btn v-on:click="uploadButtonClick" color="primary" block>Upload Encounter</v-btn>
       </v-row>
-      <v-row><p color="error">The upload button does not work yet!!!!!!!!!!!!!!!</p></v-row>
+      <v-row><p color="error">Note: This feature is complete and does not work at the moment.</p></v-row>
     </v-container>
 
   </v-sheet>
