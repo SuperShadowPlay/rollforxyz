@@ -3,7 +3,7 @@
 
     <transition name="fade">
       <div v-if="initTable.list.value.length == 0" class="emptyText">
-        <h1 color="primary">Nothing is here yet!</h1>
+        <h1>Nothing is here yet!</h1>
         <h2>Press the <v-icon icon="mdi-plus-circle-outline"/> below to begin.</h2>
       </div>
     </transition>
@@ -74,7 +74,7 @@
     return store.state.nextButtonClick;
   });
   watch (newNextButtonClick, () => {
-    encounterActive = true;
+    if (initTable.list.value.length != 0) { encounterActive = true; }
     nextActive();
   });
 
