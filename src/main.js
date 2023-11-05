@@ -24,6 +24,8 @@ const store = createStore({
       state.nextCreature = {
         name: c.name,
         roll: c.roll,
+        health: c.health,
+        AC: c.AC,
         desc: c.desc
       }
     },

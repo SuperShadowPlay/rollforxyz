@@ -15,42 +15,65 @@
           type="text"
           :variant="editMode ? 'underlined' : 'plain'"
           v-model="properties.roll"
+          :readonly="!editMode"
           :label="editMode ? 'Roll' : ''"/>
         </v-card-subtitle>
       </v-card-item>
 
-        <v-card-text v-if="!editMode"
-        :label="editMode ? 'Description' : ''">
-        {{ properties.desc }}
-        </v-card-text>
-        <v-textarea v-else v-model="properties.desc"></v-textarea>
+      <v-row justify="center">
+        <v-col cols="11">
+          <v-card-text v-if="!editMode"
+          :label="editMode ? 'Description' : ''">
+          {{ properties.desc }}
+          </v-card-text>
+          <v-textarea v-else
+          v-model="properties.desc"/>
+        </v-col>
+      </v-row>
       
       <v-card-item>
         <div class="health">
-          <v-text-field
-          class="healthCount"
-          prepend-inner-icon="mdi-heart"
-          style="width: 100px"
-          :variant="editMode ? 'underlined' : 'plain'"
-          :type="editMode ? 'number': 'text'"
-          :label="editMode ? 'Health' : ''"
-          :readonly="!editMode"
-          v-model="properties.health">
-          </v-text-field>
+          <v-row>
+            <v-col cols="2">
+              <v-card-actions class="healthButtonContainer">
+                <v-tooltip text="Add Health" location="top">
+                  <template v-slot:activator="{ props }">
+                    <v-btn v-on:click="properties.health++" icon="mdi-plus-box" v-bind="props"/>
+                  </template>
+                </v-tooltip>
 
-          <v-card-actions class="healthButtonContainer">
-            <v-tooltip text="Add Health" location="top">
-              <template v-slot:activator="{ props }">
-                <v-btn v-on:click="properties.health++" icon="mdi-plus-box" v-bind="props"/>
-              </template>
-            </v-tooltip>
+                <v-tooltip text="Subtract Health" location="top">
+                  <template v-slot:activator="{ props }">
+                    <v-btn v-on:click="properties.health--" icon="mdi-minus-box" v-bind="props"/>
+                  </template>
+                </v-tooltip>
+              </v-card-actions>
+            </v-col>
 
-            <v-tooltip text="Subtract Health" location="top">
-              <template v-slot:activator="{ props }">
-                <v-btn v-on:click="properties.health--" icon="mdi-minus-box" v-bind="props"/>
-              </template>
-            </v-tooltip>
-          </v-card-actions>
+            <v-col>
+              <v-text-field
+              class="healthCount"
+              prepend-inner-icon="mdi-heart"
+              :variant="editMode ? 'underlined' : 'plain'"
+              :type="editMode ? 'number': 'text'"
+              :label="editMode ? 'Health' : ''"
+              :readonly="!editMode"
+              v-model="properties.health">
+              </v-text-field>
+            </v-col>
+
+            <v-col>
+              <v-text-field
+              class="ACCount"
+              prepend-inner-icon="mdi-shield"
+              :variant="editMode ? 'underlined' : 'plain'"
+              :type="editMode ? 'number': 'text'"
+              :label="editMode ? 'AC' : ''"
+              :readonly="!editMode"
+              v-model="properties.AC">
+              </v-text-field>
+            </v-col>
+          </v-row>
         </div>
       </v-card-item>
     
@@ -85,7 +108,7 @@
 
 <script setup>
   import { ref, computed, watch } from 'vue'
-  const props = defineProps(['name', 'roll', 'desc', 'health', 'id', 'activeID'])
+  const props = defineProps(['name', 'roll', 'desc', 'health', 'AC', 'id', 'activeID'])
   const emit = defineEmits(['removeCreature', 'updateInfo', 'changeActive'])
 
   let properties = ref({ // Contains props in an editable fashion
@@ -93,6 +116,7 @@
     roll: props.roll,
     desc: props.desc,
     health: props.health,
+    AC: props.AC,
     id: props.id,
     activeID: props.activeID,
   });

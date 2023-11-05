@@ -13,7 +13,7 @@
         <CreatureCard
           v-for="creature in creatureListRef" :key="creature.id"
           :name="creature.name" :desc="creature.desc"
-          :roll="creature.roll" :health="creature.health"
+          :roll="creature.roll" :health="creature.health" :AC="creature.AC"
           :id="creature.id" :activeID="activeIDRef"
           @remove-creature="removeCreature" @update-info="updateInfo" @change-active="changeActive"
           class="individualCard"
@@ -89,7 +89,8 @@
     let previousActiveRoll;
     if (encounterActive) { previousActiveRoll = initTable.list.value[initTable.activeIndex].roll; }
 
-    initTable.add(c.name, c.roll, c.desc);
+    console.log(c)
+    initTable.add(c.name, c.roll, c.health, c.AC, c.desc);
 
     // If the new creature displaces the current active, preserve the correct order and active card.
     if (encounterActive) {

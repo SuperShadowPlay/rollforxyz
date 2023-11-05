@@ -19,6 +19,7 @@ export default createVuetify({
         dark: false,
         colors: {
           background: '#EEEEEE', // Grey lighten 3
+          'background-darken': '#BDBDBD', // Grey lighten 1
           primary: '#673ab7', // Deep purple base
           secondary: '#009688', // Teal base
           accent: '#4caf50', // Green base
