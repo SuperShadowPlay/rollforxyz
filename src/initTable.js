@@ -24,13 +24,14 @@ export default class initTable {
     this.activeIndex = this.getIndexByID(newActiveID);
   }
 
-  add(newName, newRoll, newDesc) {
+  add(newName, newRoll, newHealth, newAC, newDesc) {
     // Add a creature to the initiative and returns its new ID
     let newCreature = {
       name: newName,
       roll: newRoll,
+      health: newHealth,
+      AC: newAC,
       desc: newDesc,
-      health: null,
       id: nanoid()
     };
     this.list.value.push(newCreature);
@@ -62,6 +63,20 @@ export default class initTable {
   getIndexByID(id) {
     // Finds the index of a certain creature in the list by ID
     return this.list.value.map((c) => c.id).indexOf(id);
+  }
+
+  serialize() {
+    return JSON.stringify({
+      encounter: JSON.stringify(this.list.value),
+      activeIndex: this.activeIndex,
+      activeID: this.activeID,
+    });
+  }
+
+  deserialize(serializedObjStr) {
+    this.list = JSON.parse(serializedObjStr.encounter);
+    this.activeIndex = serializedObjStr.activeIndex;
+    this.activeID = serializedObjStr.activeID;
   }
 
   // These getters only to expose reactive variables to template.

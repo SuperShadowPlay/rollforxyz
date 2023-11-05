@@ -17,6 +17,18 @@
       </v-dialog>
     </div>
 
+    <div class="downloadButton button">
+      <v-dialog activator="parent" width="auto">
+        <template v-slot:activator="{ props }">
+          <v-btn color="primary" icon="mdi-file-download-outline" size="large" v-bind="props" @click="downloadButtonClick"></v-btn>
+        </template>
+        
+        <template v-slot:default="{ isActive }">
+          <DownloadEncounter/>
+        </template>
+      </v-dialog>
+    </div>
+
   </div>
 </template>
 
@@ -24,6 +36,7 @@
   import { useStore } from 'vuex';
 
   import CreateCreature from '@/components/CreateCreature.vue';
+  import DownloadEncounter from '@/components/DownloadEncounter.vue';
 
   const store = useStore(); // Vuex store
 
@@ -31,8 +44,8 @@
     store.commit('nextButtonActivate');
   }
 
-  function createButtonClick() {
-
+  function downloadButtonClick() {
+    store.commit('downloadButtonActivate');
   }
 </script>
 
@@ -54,5 +67,9 @@
 
   .createButton {
     order: 2;
+  }
+
+  .downloadButton {
+    order: 3;
   }
 </style>

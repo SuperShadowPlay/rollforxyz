@@ -27,6 +27,7 @@ In no particular order:
 - [x] Next button sticks to the bottom of the page
 - [ ] Page scrolls down when active enemy is off screen
 - [x] Add metadata
+- [x] Add background and indicator for an empty encounter
 - [ ] Save/load encounters
 - [ ] Integrate statblocks (only if legally possible - TBD)
 - [ ] Add status checkboxes

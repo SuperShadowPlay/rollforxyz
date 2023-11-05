@@ -1,11 +1,19 @@
 <template>
-  <v-container>    
+  <v-container>
+
+    <transition name="fade">
+      <div v-if="initTable.list.value.length == 0" class="emptyText">
+        <h1>Nothing is here yet!</h1>
+        <h2>Press the <v-icon icon="mdi-plus-circle-outline"/> below to begin.</h2>
+      </div>
+    </transition>
+
     <div class="content">
       <transition-group name="card" tag="div" class="cards">
         <CreatureCard
           v-for="creature in creatureListRef" :key="creature.id"
           :name="creature.name" :desc="creature.desc"
-          :roll="creature.roll" :health="creature.health"
+          :roll="creature.roll" :health="creature.health" :AC="creature.AC"
           :id="creature.id" :activeID="activeIDRef"
           @remove-creature="removeCreature" @update-info="updateInfo" @change-active="changeActive"
           class="individualCard"
@@ -33,12 +41,11 @@
   // Get everything in the correct order on initial setup
   resetEncounter()
 
-  /*// Debug: Pregenerated values for initTable.list. Normally will be initialized empty.
-  initTable.add('Reya', 5, 'boring lawful good');
-  //initTable.add('Kimya', 16, 'crown wearer');
-  initTable.add('Josiah', 11, 'government agent');
-  //initTable.add('Sentry', 6, 'eats eyeballs');
-  initTable.add('Kurek', 18, 'puts up with them');*/
+  // Debug: Pregenerated values for initTable.list. Normally will be initialized empty.
+  /*initTable.add('Reya', 5, 44, 18, 'boring lawful good');
+  initTable.add('Josiah', 11, 35, 16, 'government agent');
+  initTable.add('Kurek', 18, 37, 14, 'puts up with them');
+  */
   
   // Initializes variables to a default, non-active state
   function resetEncounter() {
@@ -66,7 +73,7 @@
     return store.state.nextButtonClick;
   });
   watch (newNextButtonClick, () => {
-    encounterActive = true;
+    if (initTable.list.value.length != 0) { encounterActive = true; }
     nextActive();
   });
 
@@ -74,14 +81,15 @@
   let newCreatureRequest = computed(() => {
     return store.state.nextCreature;
   });
-  watch(newCreatureRequest, (newCreatureProp) => insertNewCreature(newCreatureProp)); // DONT KNOW IF THIS WORKS, BUT IT SHOULD IF YOU MODIFY CREATECREATURE.VUE TO USE THE STORE INSTEAD OF EVENTS
+  watch(newCreatureRequest, (newCreatureProp) => insertNewCreature(newCreatureProp));
 
   // Insert a new creature. Triggered by a change to the store's nextCreature object.
   function insertNewCreature(c) {
     let previousActiveRoll;
     if (encounterActive) { previousActiveRoll = initTable.list.value[initTable.activeIndex].roll; }
 
-    initTable.add(c.name, c.roll, c.desc);
+    console.log(c)
+    initTable.add(c.name, c.roll, c.health, c.AC, c.desc);
 
     // If the new creature displaces the current active, preserve the correct order and active card.
     if (encounterActive) {
@@ -140,9 +148,33 @@
     encounterActive = true;
     initTable.changeActive(newActiveID)
   }
+
+  // Watch for download button click. In this case, upload the initTable to store
+  let downloadEncounterRequest = computed(() => {
+    return store.state.downloadButtonClick;
+  });
+  watch(downloadEncounterRequest, () => saveEncounter());
+
+  function saveEncounter() {
+    store.commit('uploadInitTable', initTable);
+  }
+
+  function loadEncounter(encTable) {
+
+  }
 </script>
 
 <style scoped>
+.emptyText {
+  position: fixed;
+  top: 30%;
+  left: 50%;
+  width: 80%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: #8e8e8e;
+}
+
 .content {
   width: 100%;
 }
@@ -164,6 +196,16 @@
   transform: translate(30px);
 }
 .card-leave-to {
+  opacity: 0;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
   opacity: 0;
 }
 </style>

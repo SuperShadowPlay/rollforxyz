@@ -17,6 +17,8 @@ const store = createStore({
     return {
       nextCreature: {},
       nextButtonClick: false,
+      serializedInitTable: '',
+      downloadButtonClick: false,
     }
   },
   mutations: {
@@ -24,6 +26,8 @@ const store = createStore({
       state.nextCreature = {
         name: c.name,
         roll: c.roll,
+        health: c.health,
+        AC: c.AC,
         desc: c.desc
       }
     },
@@ -31,6 +35,12 @@ const store = createStore({
       // The next button only needs to change the reactive element to trigger the callback in CreatureBox.vue
       // So it just flips between true and false to keep it simple.
       state.nextButtonClick = !state.nextButtonClick;
+    },
+    uploadInitTable(state, initTableObj) {
+      state.serializedInitTable = initTableObj.serialize();
+    },
+    downloadButtonActivate(state) {
+      state.downloadButtonClick = !state.downloadButtonClick;
     }
   },
 });
