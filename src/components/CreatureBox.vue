@@ -41,12 +41,10 @@
   // Get everything in the correct order on initial setup
   resetEncounter()
 
-  /*// Debug: Pregenerated values for initTable.list. Normally will be initialized empty.
-  initTable.add('Reya', 5, 'boring lawful good');
-  //initTable.add('Kimya', 16, 'crown wearer');
-  initTable.add('Josiah', 11, 'government agent');
-  //initTable.add('Sentry', 6, 'eats eyeballs');
-  initTable.add('Kurek', 18, 'puts up with them');*/
+  // Debug: Pregenerated values for initTable.list. Normally will be initialized empty.
+  initTable.add('Reya', 5, 44, 18, 'boring lawful good');
+  initTable.add('Josiah', 11, 35, 16, 'government agent');
+  initTable.add('Kurek', 18, 37, 14, 'puts up with them');
   
   // Initializes variables to a default, non-active state
   function resetEncounter() {
@@ -82,7 +80,7 @@
   let newCreatureRequest = computed(() => {
     return store.state.nextCreature;
   });
-  watch(newCreatureRequest, (newCreatureProp) => insertNewCreature(newCreatureProp)); // DONT KNOW IF THIS WORKS, BUT IT SHOULD IF YOU MODIFY CREATECREATURE.VUE TO USE THE STORE INSTEAD OF EVENTS
+  watch(newCreatureRequest, (newCreatureProp) => insertNewCreature(newCreatureProp));
 
   // Insert a new creature. Triggered by a change to the store's nextCreature object.
   function insertNewCreature(c) {
@@ -148,6 +146,20 @@
     // Check if this creature became active
     encounterActive = true;
     initTable.changeActive(newActiveID)
+  }
+
+  // Watch for download button click. In this case, upload the initTable to store
+  let downloadEncounterRequest = computed(() => {
+    return store.state.downloadButtonClick;
+  });
+  watch(downloadEncounterRequest, () => saveEncounter());
+
+  function saveEncounter() {
+    store.commit('uploadInitTable', initTable);
+  }
+
+  function loadEncounter(encTable) {
+
   }
 </script>
 

@@ -65,6 +65,20 @@ export default class initTable {
     return this.list.value.map((c) => c.id).indexOf(id);
   }
 
+  serialize() {
+    return JSON.stringify({
+      encounter: JSON.stringify(this.list.value),
+      activeIndex: this.activeIndex,
+      activeID: this.activeID,
+    });
+  }
+
+  deserialize(serializedObjStr) {
+    this.list = JSON.parse(serializedObjStr.encounter);
+    this.activeIndex = serializedObjStr.activeIndex;
+    this.activeID = serializedObjStr.activeID;
+  }
+
   // These getters only to expose reactive variables to template.
   // They are otherwise public variables in the rest of the code.
   getList() {
