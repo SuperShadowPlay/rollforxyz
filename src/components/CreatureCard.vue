@@ -1,5 +1,5 @@
 <template>
-  <div class="card">
+  <div class="card" ref="cardContainer">
     <v-card
     :color="cardConfig.color"
     :elevation="cardConfig.elevation">
@@ -137,6 +137,7 @@
   let activeTrans = ref(cardTrans.inactive); // Which cardTrans is currently in use
 
   let editMode = ref(false); // Specifies if card information is editable
+  const cardContainer = ref(null); // ref for scrolling to active card
 
   // Reactive based on activeID
   // This handles the "functional" attributes of the card while `properties` holds all the actual data
@@ -153,6 +154,11 @@
       vals.isActive = true;
       vals.color = 'accent';
       vals.elevation = 20;
+      
+      cardContainer.value?.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
     }
 
     // Different color for edit mode
@@ -202,8 +208,11 @@
 <style scoped>
 .card {
   margin: 10px;
+
   transform: v-bind(activeTrans);
   transition: all 0.3s linear;
+
+  scroll-margin: 15vh;
 }
 
 .health {
