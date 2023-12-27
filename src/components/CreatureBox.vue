@@ -170,6 +170,12 @@
     // This function is not used when starting from scratch with a blank page, only for the aforementioned purpose above.
     initTable.deserialize(store.state.serializedInitTable);
   }
+
+  // Watch for clear button click. When it happens, clear the whole initTable
+  let clearEncounterRequest = computed(() => {
+    return store.state.clearButtonClick;
+  });
+  watch(clearEncounterRequest, () => initTable.clear());
 </script>
 
 <style scoped>

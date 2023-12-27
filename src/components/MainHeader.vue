@@ -4,7 +4,7 @@
       <v-col>
         <div class="left">
           <h1>Roll for
-            <img class="logo" :src="logoImage"/>
+            <img class="logo" :src="logoImage" alt="X Y Z"/>
           </h1>
         </div>
       </v-col>

@@ -37,6 +37,12 @@ const store = createStore({
       // So it just flips between true and false to keep it simple.
       state.nextButtonClick = !state.nextButtonClick;
     },
+    downloadButtonActivate(state) {
+      state.downloadButtonClick = !state.downloadButtonClick;
+    },
+    clearButtonActivate(state) {
+      state.clearButtonClick = !state.clearButtonClick;
+    },
     uploadInitTableToStore(state, initTableObj) {
       state.serializedInitTable = initTableObj.serialize();
     },
@@ -45,9 +51,6 @@ const store = createStore({
       // that alerts CreatureBox.vue to the change.
       state.serializedInitTable = serializedInitTable;
       state.newInitTableLoaded = !state.newInitTableLoaded;
-    },
-    downloadButtonActivate(state) {
-      state.downloadButtonClick = !state.downloadButtonClick;
     },
   },
 });

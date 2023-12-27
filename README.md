@@ -31,7 +31,8 @@ In no particular order:
 - [x] Add notes on creature
 - [x] Edit creature
 - [x] Health tracker
-- [ ] Save/load encounters
+- [x] Save/load encounters
+- [ ] Collapsable menu for bottom bar buttons
 - [ ] Add feedback to creature creation
 - [ ] Cross out defeated enemy (and scroll past it)
 - [ ] Fix add creature dialog to be better on mobile and more sensibly laid out
