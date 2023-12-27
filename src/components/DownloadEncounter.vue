@@ -9,7 +9,6 @@
       <v-row>
         <v-btn v-on:click="uploadButtonClick" color="primary" block>Upload Encounter</v-btn>
       </v-row>
-      <v-row><p color="error">Note: This feature is complete and does not work at the moment.</p></v-row>
     </v-container>
 
   </v-sheet>
@@ -24,11 +23,12 @@
   const jsonString = ref(getJSON());
 
   function getJSON() {
+    console.log(store.state.serializedInitTable);
     return store.state.serializedInitTable;
   }
 
   function uploadButtonClick() {
-    
+    store.commit('processNewInitTable', jsonString);
   }
 </script>
 

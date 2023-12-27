@@ -60,23 +60,47 @@ export default class initTable {
     return removedIndex;
   }
 
+  clear() {
+    // Clears the entire table at once using remove()
+    const IDs = this.list.value.map((creature) => creature.id);
+    IDs.forEach((id) => this.remove(id));
+  }
+
   getIndexByID(id) {
     // Finds the index of a certain creature in the list by ID
     return this.list.value.map((c) => c.id).indexOf(id);
   }
 
   serialize() {
+    // Serialize the object into one stringified JSON that can be deserialized with deserialize()
     return JSON.stringify({
       encounter: JSON.stringify(this.list.value),
       activeIndex: this.activeIndex,
-      activeID: this.activeID,
+      activeID: this.activeID.value,
     });
   }
 
   deserialize(serializedObjStr) {
-    this.list = JSON.parse(serializedObjStr.encounter);
-    this.activeIndex = serializedObjStr.activeIndex;
-    this.activeID = serializedObjStr.activeID;
+    // Take a string from the serialize() function and replace the current initTable with the serialized one.
+    let deserializedObj = JSON.parse(serializedObjStr);
+
+    this.clear(); // Remove current table
+
+    // Insert new creatures from serialized data.
+    const newInitTable = JSON.parse(deserializedObj.encounter);
+    newInitTable.forEach((element) => {
+      this.add(
+        element.name,
+        element.roll,
+        element.health,
+        element.AC,
+        element.desc,
+        )
+    });
+
+    // Update other values to be consistent with serialized data.
+    this.activeIndex = deserializedObj.activeIndex;
+    this.activeID.value = deserializedObj.activeID;
   }
 
   // These getters only to expose reactive variables to template.

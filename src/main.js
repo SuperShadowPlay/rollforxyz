@@ -19,6 +19,7 @@ const store = createStore({
       nextButtonClick: false,
       serializedInitTable: '',
       downloadButtonClick: false,
+      newInitTableLoaded: false,
     }
   },
   mutations: {
@@ -36,12 +37,18 @@ const store = createStore({
       // So it just flips between true and false to keep it simple.
       state.nextButtonClick = !state.nextButtonClick;
     },
-    uploadInitTable(state, initTableObj) {
+    uploadInitTableToStore(state, initTableObj) {
       state.serializedInitTable = initTableObj.serialize();
+    },
+    processNewInitTable(state, serializedInitTable) {
+      // When a new initTable is uploaded by the user, put it in the store and then flip a flag
+      // that alerts CreatureBox.vue to the change.
+      state.serializedInitTable = serializedInitTable;
+      state.newInitTableLoaded = !state.newInitTableLoaded;
     },
     downloadButtonActivate(state) {
       state.downloadButtonClick = !state.downloadButtonClick;
-    }
+    },
   },
 });
 app.use(store)
