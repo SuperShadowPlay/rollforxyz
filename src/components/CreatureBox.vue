@@ -149,19 +149,33 @@
     initTable.changeActive(newActiveID)
   }
 
-  // Watch for download button click. In this case, upload the initTable to store
+  // Watch for download button click. When it happens, upload the initTable to store
   let downloadEncounterRequest = computed(() => {
     return store.state.downloadButtonClick;
   });
   watch(downloadEncounterRequest, () => saveEncounter());
 
+  // Watch for upload button click. When it happens, grab the new initTable from the store and load it
+  let uploadEncounterRequest = computed(() => {
+    return store.state.newInitTableLoaded;
+  });
+  watch(uploadEncounterRequest, () => loadEncounter());
+
   function saveEncounter() {
-    store.commit('uploadInitTable', initTable);
+    store.commit('uploadInitTableToStore', initTable);
   }
 
-  function loadEncounter(encTable) {
-
+  function loadEncounter() {
+    // Loads a whole user-uploaded encounter from the upload button.
+    // This function is not used when starting from scratch with a blank page, only for the aforementioned purpose above.
+    initTable.deserialize(store.state.serializedInitTable);
   }
+
+  // Watch for clear button click. When it happens, clear the whole initTable
+  let clearEncounterRequest = computed(() => {
+    return store.state.clearButtonClick;
+  });
+  watch(clearEncounterRequest, () => initTable.clear());
 </script>
 
 <style scoped>

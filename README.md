@@ -25,19 +25,24 @@ In no particular order:
 - [x] Select an arbitrary card as the next in line
 - [x] Only begin selecting creatures once the user is done initially adding creatures
 - [x] Next button sticks to the bottom of the page
-- [ ] Page scrolls down when active enemy is off screen
+- [x] Page scrolls down when active enemy is off screen
 - [x] Add metadata
 - [x] Add background and indicator for an empty encounter
-- [ ] Save/load encounters
-- [ ] Integrate statblocks (only if legally possible - TBD)
-- [ ] Add status checkboxes
 - [x] Add notes on creature
 - [x] Edit creature
+- [x] Health tracker
+- [x] Save/load encounters
+- [x] Collapsable menu for bottom bar buttons
+- [ ] Active encounter persists between browsing sessions
+- [ ] Add feedback to creature creation
+- [ ] Cross out defeated enemy (and scroll past it)
+- [ ] Fix add creature dialog to be better on mobile and more sensibly laid out
+- [ ] Re-arrange card elements to work on mobile and not look so oddly spaced in general
+- [ ] Integrate statblocks (only if legally possible - TBD)
+- [ ] Add status checkboxes
 - [ ] Roll initiative for you
 - [ ] Show actions
 - [ ] Icons for creatures
-- [x] Health tracker
-- [ ] Cross out defeated enemy
 - [ ] Fancy initiative count markers
 - [ ] Nice stylesheet and interface (subjective and a bottomless pit of development time)
 - [ ] Encounter templates
