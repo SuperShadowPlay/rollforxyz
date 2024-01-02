@@ -6,7 +6,7 @@
     </div>
 
       <div class="optionsButton button" id="rotate">
-        <v-btn color="primary" icon="mdi-dots-vertical" size="large" v-on:click="optionsButtonClick"/>
+        <v-btn color="primary" icon="mdi-cog" size="large" v-on:click="optionsButtonClick"/>
       </div>
 
     <transition name="openOptions">
@@ -14,7 +14,7 @@
         <div class="createButton button">
           <v-dialog activator="parent" width="auto">
             <template v-slot:activator="{ props }">
-              <v-btn color="primary" icon="mdi-plus-circle-outline" v-bind="props"></v-btn>
+              <v-btn color="secondary" icon="mdi-plus-circle-outline" v-bind="props"></v-btn>
             </template>
             
             <template v-slot:default="{ isActive }">
@@ -26,7 +26,7 @@
         <div class="downloadButton button">
           <v-dialog activator="parent" width="auto">
             <template v-slot:activator="{ props }">
-              <v-btn color="primary" icon="mdi-file-download-outline" v-bind="props" @click="downloadButtonClick"></v-btn>
+              <v-btn color="secondary" icon="mdi-file-download-outline" v-bind="props" @click="downloadButtonClick"></v-btn>
             </template>
             
             <template v-slot:default="{ isActive }">
@@ -38,7 +38,7 @@
         <div class="clearButton button">
           <v-dialog activator="parent" width="auto">
             <template v-slot:activator="{ props }">
-              <v-btn color="primary" icon="mdi-minus-circle-multiple-outline" v-bind="props"/>
+              <v-btn color="secondary" icon="mdi-minus-circle-multiple-outline" v-bind="props"/>
             </template>
             
             <template v-slot:default="{ isActive }">
@@ -77,8 +77,8 @@
 
   const store = useStore(); // Vuex store
 
-  const showExtra = ref(false); // If the extra options are showing
-  let rotated = false; // If the more options button is rotated (due to a click that shows the menu)
+  const showExtra = ref(true); // If the extra options are showing
+  let rotated = false; // If the more options button is rotated (due to a click that shows/hides the menu)
 
   function nextButtonClick() {
     store.commit('nextButtonActivate');
@@ -90,7 +90,7 @@
     let button = document.getElementById('rotate');
 
     if (rotated === false) {
-      button.style.transform = 'rotate(90deg)';
+      button.style.transform = 'rotate(-180deg)';
       rotated = true;
     } else {
       button.style.transform = 'rotate(0)';
