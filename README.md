@@ -44,6 +44,8 @@ In no particular order:
 - [ ] Show actions
 - [ ] Icons for creatures
 - [ ] Fancy initiative count markers
+- [ ] Multiple active encounters
+- [ ] Overview of creatures in initiative
 - [ ] Nice stylesheet and interface (subjective and a bottomless pit of development time)
 - [ ] Encounter templates
 - [ ] Mass-add same type of creature (option to roll initiative for you)
