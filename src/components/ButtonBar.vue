@@ -14,7 +14,7 @@
         <div class="createButton button">
           <v-dialog activator="parent" width="auto">
             <template v-slot:activator="{ props }">
-              <v-btn color="secondary" icon="mdi-plus-circle-outline" v-bind="props"></v-btn>
+              <v-btn color="info" icon="mdi-plus-circle-outline" v-bind="props"></v-btn>
             </template>
             
             <template v-slot:default="{ isActive }">
@@ -26,7 +26,7 @@
         <div class="downloadButton button">
           <v-dialog activator="parent" width="auto">
             <template v-slot:activator="{ props }">
-              <v-btn color="secondary" icon="mdi-file-download-outline" v-bind="props" @click="downloadButtonClick"></v-btn>
+              <v-btn color="info" icon="mdi-file-download-outline" v-bind="props" @click="downloadButtonClick"></v-btn>
             </template>
             
             <template v-slot:default="{ isActive }">
@@ -38,7 +38,7 @@
         <div class="clearButton button">
           <v-dialog activator="parent" width="auto">
             <template v-slot:activator="{ props }">
-              <v-btn color="secondary" icon="mdi-minus-circle-multiple-outline" v-bind="props"/>
+              <v-btn color="info" icon="mdi-minus-circle-multiple-outline" v-bind="props"/>
             </template>
             
             <template v-slot:default="{ isActive }">

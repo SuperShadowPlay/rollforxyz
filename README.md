@@ -33,7 +33,7 @@ In no particular order:
 - [x] Health tracker
 - [x] Save/load encounters
 - [x] Collapsable menu for bottom bar buttons
-- [ ] Active encounter persists between browsing sessions
+- [x] Active encounter persists between browsing sessions
 - [ ] Add feedback to creature creation
 - [ ] Cross out defeated enemy (and scroll past it)
 - [ ] Fix add creature dialog to be better on mobile and more sensibly laid out

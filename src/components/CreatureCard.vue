@@ -108,7 +108,7 @@
 
 <script setup>
   import { ref, computed, watch } from 'vue'
-  const props = defineProps(['name', 'roll', 'desc', 'health', 'AC', 'id', 'activeID'])
+  const props = defineProps(['name', 'roll', 'desc', 'health', 'AC', 'id', 'activeID', 'autoScroll'])
   const emit = defineEmits(['removeCreature', 'updateInfo', 'changeActive'])
 
   let properties = ref({ // Contains props in an editable fashion
@@ -119,6 +119,7 @@
     AC: props.AC,
     id: props.id,
     activeID: props.activeID,
+    autoScroll: props.autoScroll,
   });
 
   /*
@@ -155,10 +156,13 @@
       vals.color = 'accent';
       vals.elevation = 20;
       
-      cardContainer.value?.scrollIntoView({
-        behavior: "smooth",
-        block: "start"
-      });
+      if (props.autoScroll === true) {
+        cardContainer.value?.scrollIntoView({
+          behavior: "smooth",
+          block: "start"
+        });
+      }
+      
     }
 
     // Different color for edit mode

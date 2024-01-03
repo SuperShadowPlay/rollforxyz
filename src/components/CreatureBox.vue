@@ -14,7 +14,7 @@
           v-for="creature in creatureListRef" :key="creature.id"
           :name="creature.name" :desc="creature.desc"
           :roll="creature.roll" :health="creature.health" :AC="creature.AC"
-          :id="creature.id" :activeID="activeIDRef"
+          :id="creature.id" :activeID="activeIDRef" :autoScroll="autoScroll"
           @remove-creature="removeCreature" @update-info="updateInfo" @change-active="changeActive"
           class="individualCard"
         />
@@ -25,7 +25,7 @@
 </template>
 
 <script setup>
-  import { computed, watch } from 'vue';
+  import { computed, watch, ref } from 'vue';
   import { useStore } from 'vuex';
 
   import CreatureCard from './CreatureCard.vue';
@@ -35,11 +35,17 @@
   const initTable = new initTableClass(); // Holds the creatures in the initiative
   const creatureListRef = initTable.getList(); // Expose the list to the template (for some reason?)
   const activeIDRef = initTable.getActiveID(); // Same as above
+  const autoScroll = ref(false);
 
-  let encounterActive = false // If the user has begun scrolling initiative for the encounter
+  let encounterActive = false // If the user has begun tracking initiative for the encounter
 
   // Get everything in the correct order on initial setup
-  resetEncounter()
+  encounterActive = false;
+  initTable.activeID.value = -1;
+  initTable.activeIndex = -1;
+
+  // If a previous session exists in localStorage, load it
+  initTable.loadFromLocalStorage();
 
   // Debug: Pregenerated values for initTable.list. Normally will be initialized empty.
   /*initTable.add('Reya', 5, 44, 18, 'boring lawful good');
@@ -52,7 +58,9 @@
     encounterActive = false;
     initTable.activeID.value = -1;
     initTable.activeIndex = -1;
+    initTable.clear();
   }
+
 
   // Increments the active ID through the list
   function nextActive() {
@@ -66,7 +74,10 @@
       initTable.activeID.value = initTable.list.value[initTable.activeIndex].id;
       console.log("ID: " + initTable.activeID.value + "    Idx: " + initTable.activeIndex);
     }
+
+    initTable.updateLocalStorage();
   }
+
 
   // Run when the next button is clicked
   let newNextButtonClick = computed(() => {
@@ -74,8 +85,10 @@
   });
   watch (newNextButtonClick, () => {
     if (initTable.list.value.length != 0) { encounterActive = true; }
+    autoScroll.value = true; // Allow auto scrolling to next card
     nextActive();
   });
+
 
   // Watch for a new creature being added via the store
   let newCreatureRequest = computed(() => {
@@ -83,8 +96,10 @@
   });
   watch(newCreatureRequest, (newCreatureProp) => insertNewCreature(newCreatureProp));
 
+
   // Insert a new creature. Triggered by a change to the store's nextCreature object.
   function insertNewCreature(c) {
+    autoScroll.value = false; // Disable auto scrolling to next card
     let previousActiveRoll;
     if (encounterActive) { previousActiveRoll = initTable.list.value[initTable.activeIndex].roll; }
 
@@ -102,10 +117,16 @@
         nextActive();
       }
     }
+
+    // Preserve changes in localStorage
+    //initTable.changeActive(initTable.getIDByIndex(initTable.activeIndex));
+    initTable.updateLocalStorage();
   }
+
 
   // Triggered by removeCreature event from CreatureCard. Removes the creature that caused the event.
   function removeCreature(id) {
+    autoScroll.value = false; // Disable auto scrolling to next card
     let removedCreatureIndex = initTable.remove(id);
 
     if (encounterActive) {
@@ -121,27 +142,19 @@
         resetEncounter();
       }
     }
+
+    // Preserve changes in localStorage
+    initTable.changeActive(initTable.getIDByIndex(initTable.activeIndex));
+    initTable.updateLocalStorage();
   }
+
 
   // Runs when a creature card is updated
   function updateInfo(c) {
     // When edit mode is exited on a card, this is called to make the changes.
-    let editedCreatureIndex = initTable.getIndexByID(c.id);
-
-    // Update properties of creature
-    initTable.list.value[editedCreatureIndex] = {
-      name: c.name,
-      desc: c.desc,
-      id: c.id,
-      roll: c.roll,
-    };
-
-    // If roll is changed, is re-orders the cards.
-    // Right now if the active card is changed, active status moves with it down the list.
-    // This seems fine but maybe it would be worth changing in the future.
-    initTable.sort();
-    initTable.changeActive(initTable.activeID.value);
+    initTable.updateInfo(c);
   }
+
 
   function changeActive(newActiveID) {
     // Check if this creature became active
@@ -149,11 +162,13 @@
     initTable.changeActive(newActiveID)
   }
 
+
   // Watch for download button click. When it happens, upload the initTable to store
   let downloadEncounterRequest = computed(() => {
     return store.state.downloadButtonClick;
   });
   watch(downloadEncounterRequest, () => saveEncounter());
+
 
   // Watch for upload button click. When it happens, grab the new initTable from the store and load it
   let uploadEncounterRequest = computed(() => {
@@ -161,9 +176,12 @@
   });
   watch(uploadEncounterRequest, () => loadEncounter());
 
+
   function saveEncounter() {
+    // Send initTable to the store to be saved externally by the user.
     store.commit('uploadInitTableToStore', initTable);
   }
+
 
   function loadEncounter() {
     // Loads a whole user-uploaded encounter from the upload button.
@@ -171,11 +189,15 @@
     initTable.deserialize(store.state.serializedInitTable);
   }
 
+
   // Watch for clear button click. When it happens, clear the whole initTable
   let clearEncounterRequest = computed(() => {
     return store.state.clearButtonClick;
   });
-  watch(clearEncounterRequest, () => initTable.clear());
+  watch(clearEncounterRequest, () => {
+    resetEncounter();
+    initTable.updateLocalStorage();
+  });
 </script>
 
 <style scoped>
@@ -215,7 +237,7 @@
 
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity 0.5s ease;
+  transition: opacity 0.4s ease;
 }
 
 .fade-enter-from,
