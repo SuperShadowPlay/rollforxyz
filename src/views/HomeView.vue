@@ -1,10 +1,12 @@
 <template>
-  <MainHeader/>
   <div class="content">
+    
     <CreatureBox/>
+
     <div class="floatingButtons">
       <ButtonBar/>
     </div>
+
   </div>
 </template>
 

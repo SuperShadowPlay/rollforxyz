@@ -11,9 +11,19 @@
 
       <v-col cols="2">
         <div class="right">
-          <v-btn variant="tonal" v-on:click="openGitHubPage">
-            GitHub
-          </v-btn>
+          <router-link to="/about">
+            <v-btn variant="tonal">
+              About
+            </v-btn>
+          </router-link>
+        </div>
+
+        <div class="right">
+          <router-link to="/">
+            <v-btn variant="tonal">
+              Home
+            </v-btn>
+          </router-link>
         </div>
       </v-col>
     </v-row>
@@ -22,10 +32,6 @@
 
 <script setup>
   import logoImage from "../assets/xyz_full_small_trans.png";
-
-  function openGitHubPage() {
-    window.open('https://github.com/SuperShadowPlay/rollforxyz/', '_blank').focus();
-  }
 </script>
 
 <style scoped>
@@ -37,6 +43,7 @@
 
   .right {
     float: right;
+    margin: 5px;
   }
 
   .img {
