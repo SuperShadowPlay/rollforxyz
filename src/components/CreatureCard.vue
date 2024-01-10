@@ -162,7 +162,11 @@
           block: "start"
         });
       }
-      
+    }
+
+    // Set to grey if card is at 0 health at creation
+    if (Number(properties.value.health) <= 0) {
+      vals.color = 'info';
     }
 
     // Different color for edit mode
@@ -173,6 +177,7 @@
     
     return vals;
   })
+
 
   watch(cardConfig, (cardConfig) => {
     // If current card was just made active, then run the activate animation
@@ -188,6 +193,7 @@
     }
   })
 
+
   function editButtonClick() {
     if (editMode.value) { // Turn off edit mode and send out update of properties
       editMode.value = false;
@@ -199,10 +205,12 @@
     }
   }
 
+
   function selectButtonClick() {
     // When this current card is forcibly made the active card
     emit('changeActive', properties.value.id)
   }
+
 
   function removeButtonClick() {
     emit('removeCreature', props.id)

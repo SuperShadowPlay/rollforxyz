@@ -86,7 +86,7 @@ export default class initTable {
   updateInfo(c) {
     // Update properties of creature
 
-    let editedCreatureIndex = initTable.getIndexByID(c.id);
+    let editedCreatureIndex = this.getIndexByID(c.id);
 
     this.list.value[editedCreatureIndex] = {
       name: c.name,
@@ -99,7 +99,7 @@ export default class initTable {
     // Right now if the active card is changed, active status moves with it down the list.
     // This seems fine but maybe it would be worth changing in the future.
     this.sort();
-    this.changeActive(initTable.activeID.value);
+    this.changeActive(this.activeID.value);
 
     this.updateLocalStorage(); // Update localstorage with new data
   }
