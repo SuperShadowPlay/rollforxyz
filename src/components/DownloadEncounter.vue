@@ -1,16 +1,8 @@
 <template>
-  <v-sheet class="mx-5 content" color="background-darken">
-    <v-container>
-      <v-row>
-        <v-textarea v-model="jsonString">
-        </v-textarea>
-      </v-row>
+  <v-sheet class="mx-5 content">
+    <v-textarea class="text" v-model="jsonString"/>
 
-      <v-row>
-        <v-btn v-on:click="uploadButtonClick" color="primary" block>Upload Encounter</v-btn>
-      </v-row>
-    </v-container>
-
+    <v-btn class="uploadButton" v-on:click="uploadButtonClick" color="primary">Upload Encounter</v-btn>
   </v-sheet>
 </template>
 
@@ -36,6 +28,21 @@
 .content {
   width: 500px;
   max-width: 90%;
+  height: 800px;
+  max-height: 90%;
+
   margin: auto;
+  padding: 5px;
+
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+}
+
+.text {
+  height: auto;
+  width: auto;
+
+  flex-grow: 2;
 }
 </style>
