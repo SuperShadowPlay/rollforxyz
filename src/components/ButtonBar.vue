@@ -73,7 +73,7 @@
   import { useStore } from 'vuex';
 
   import CreateCreature from '@/components/CreateCreature.vue';
-  import DownloadEncounter from '@/components/DownloadEncounter.vue';
+  import DownloadEncounter from '@/components/DownloadModal.vue';
 
   const store = useStore(); // Vuex store
 
