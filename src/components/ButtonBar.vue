@@ -111,6 +111,7 @@
   .container {
     display: flex;
     flex-direction: row-reverse;
+    flex-wrap: wrap;
     justify-content: flex-end;
     align-items: flex-end;
   }
@@ -123,14 +124,14 @@
     order: 1;
   }
 
-  .extraOptions {
-    order: 3;
-  }
-
   .optionsButton {
     order: 2;
 
     transition: transform 0.5s ease;
+  }
+
+  .extraOptions {
+    order: 3;
   }
 
   .createButton {
