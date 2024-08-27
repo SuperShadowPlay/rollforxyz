@@ -36,13 +36,20 @@
           <v-row>
             <v-col cols="2">
               <v-card-actions class="healthButtonContainer">
-                <v-tooltip text="Add Health" location="top">
-                  <template v-slot:activator="{ props }">
-                    <v-btn v-on:click="properties.health++" icon="mdi-plus-box" v-bind="props"/>
-                  </template>
-                </v-tooltip>
+                <v-menu location="top center" origin="auto" transition="slide-x-transition">
+                  <template v-slot:activator="{ props: menu }">
 
-                <v-tooltip text="Subtract Health" location="top">
+                    <v-tooltip text="Add Health" location="bottom center">
+                      <template v-slot:activator="{ props: tooltip }">
+                        <v-btn icon="mdi-plus-box" v-bind="mergeProps(menu, tooltip)"/>
+                      </template>
+                    </v-tooltip>
+                    
+                  </template>
+                  <HealthMenu @healthChange="healthButtonClick"/>
+                </v-menu>
+
+                <v-tooltip text="Subtract Health" location="bottom center">
                   <template v-slot:activator="{ props }">
                     <v-btn v-on:click="properties.health--" icon="mdi-minus-box" v-bind="props"/>
                   </template>
@@ -107,9 +114,11 @@
 </template>
 
 <script setup>
-  import { ref, computed, watch } from 'vue'
+  import { ref, computed, watch, mergeProps } from 'vue'
   const props = defineProps(['name', 'roll', 'desc', 'health', 'AC', 'id', 'activeID', 'autoScroll'])
   const emit = defineEmits(['removeCreature', 'updateInfo', 'changeActive'])
+
+  import HealthMenu from './HealthMenu.vue';
 
   let properties = ref({ // Contains props in an editable fashion
     name: props.name,
@@ -214,6 +223,12 @@
 
   function removeButtonClick() {
     emit('removeCreature', props.id)
+  }
+
+  function healthButtonClick(healthAdjust) {
+    // Updates health based on user input in the health menu
+    properties.value.health = Number(properties.value.health) + healthAdjust;
+    emit('updateInfo', properties.value)
   }
 </script>
 
