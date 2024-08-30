@@ -36,24 +36,31 @@
           <v-row>
             <v-col cols="2">
               <v-card-actions class="healthButtonContainer">
-                <v-menu location="top center" origin="auto" transition="slide-x-transition">
-                  <template v-slot:activator="{ props: menu }">
+                <v-overlay location-strategy="connected" location="top center" origin="auto" transition="slide-x-transition">
+                  <template v-slot:activator="{ props: overlay }">
 
                     <v-tooltip text="Add Health" location="bottom center">
                       <template v-slot:activator="{ props: tooltip }">
-                        <v-btn icon="mdi-plus-box" v-bind="mergeProps(menu, tooltip)"/>
+                        <v-btn icon="mdi-plus-box" v-bind="mergeProps(overlay, tooltip)"/>
                       </template>
                     </v-tooltip>
                     
                   </template>
-                  <HealthMenu @healthChange="healthButtonClick"/>
-                </v-menu>
+                  <HealthMenu operation="+" @healthChange="healthButtonClick"/>
+                </v-overlay>
 
-                <v-tooltip text="Subtract Health" location="bottom center">
-                  <template v-slot:activator="{ props }">
-                    <v-btn v-on:click="properties.health--" icon="mdi-minus-box" v-bind="props"/>
+                <v-overlay location-strategy="connected" location="top center" origin="auto" transition="slide-x-transition">
+                  <template v-slot:activator="{ props: overlay }">
+
+                    <v-tooltip text="Subtract Health" location="bottom center">
+                      <template v-slot:activator="{ props: tooltip }">
+                        <v-btn icon="mdi-minus-box" v-bind="mergeProps(overlay, tooltip)"/>
+                      </template>
+                    </v-tooltip>
+                    
                   </template>
-                </v-tooltip>
+                  <HealthMenu operation="-" @healthChange="healthButtonClick"/>
+                </v-overlay>
               </v-card-actions>
             </v-col>
 
