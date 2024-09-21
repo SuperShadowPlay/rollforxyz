@@ -2,11 +2,12 @@ import { nanoid } from 'nanoid';
 import { ref } from 'vue';
 
 export default class initTable {
-  constructor() {
+  constructor(lastID) {
     this.list          = ref([]);
     this.activeIndex   = -1;
     this.activeID      = ref("nothingYet");
     this.tableModified = false;
+    this.tableID       = lastID || nanoid();
   }
   
 
@@ -138,25 +139,29 @@ export default class initTable {
 
     // Only update the whole table if it was actually changed to be less wasteful of compute power
     if (this.tableModified) {
-      localStorage.setItem('initTable', this.serialize());
+      localStorage.setItem('initTable-' + this.tableID, this.serialize());
       this.tableModified = false;
     }
 
-    localStorage.setItem('activeIndex', this.activeIndex);
+    localStorage.setItem('activeIndex-' + this.tableID, this.activeIndex);
   }
 
 
-  loadFromLocalStorage() {
+  loadFromLocalStorage(id) {
     // Load data from local storage
-    let newInitTable = localStorage.getItem('initTable');
+    let newInitTable = localStorage.getItem('initTable-' + id);
     if (newInitTable !== null) {
       // Save variables between loading a new init table
-      let tempIndex = Number(localStorage.getItem('activeIndex'));
+      let tempIndex = Number(localStorage.getItem('activeIndex-' + id));
 
-      this.deserialize(localStorage.getItem('initTable')); // Load init table creatures
+      this.deserialize(newInitTable); // Load init table creatures
 
       // Restore active index
-      this.activeIndex = tempIndex
+      this.activeIndex = tempIndex;
+
+      // Set current table ID
+      this.tableID = id;
+      localStorage.setItem('lastTableID', id);
 
       // Update highlight effect
       if (this.activeIndex !== -1 && this.list.value.length !== 0) {
@@ -189,5 +194,9 @@ export default class initTable {
 
   getActiveID() {
     return this.activeID;
+  }
+
+  getTableID() {
+    return this.tableID;
   }
 }

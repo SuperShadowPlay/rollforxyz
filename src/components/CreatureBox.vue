@@ -32,7 +32,7 @@
   import initTableClass from '@/initTable';
 
   const store = useStore(); // Vuex store
-  const initTable = new initTableClass(); // Holds the creatures in the initiative
+  const initTable = new initTableClass(localStorage.getItem('lastTableID')); // Holds the creatures in the initiative
   const creatureListRef = initTable.getList(); // Expose the list to the template (for some reason?)
   const activeIDRef = initTable.getActiveID(); // Same as above
   const autoScroll = ref(false);
@@ -45,13 +45,10 @@
   initTable.activeIndex = -1;
 
   // If a previous session exists in localStorage, load it
-  initTable.loadFromLocalStorage();
+  initTable.loadFromLocalStorage(initTable.getTableID());
 
-  // Debug: Pregenerated values for initTable.list. Normally will be initialized empty.
-  /*initTable.add('Reya', 5, 44, 18, 'boring lawful good');
-  initTable.add('Josiah', 11, 35, 16, 'government agent');
-  initTable.add('Kurek', 18, 37, 14, 'puts up with them');
-  */
+  // Set the active table ID so that it is known which table to pull from upload page reload
+  localStorage.setItem('lastTableID', initTable.getTableID());
   
   // Initializes variables to a default, non-active state
   function resetEncounter() {
