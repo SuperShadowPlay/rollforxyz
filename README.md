@@ -8,7 +8,7 @@ focus more on having fun!
 
 Made with the Vue.js 3 framework.
 
-## Live @ https://dnd.trevorcorc.com
+## Live @ https://roll.forthe.quest
 
 ![Demo Image](./showcase.png)
 
